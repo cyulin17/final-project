@@ -1,0 +1,104 @@
+body {
+  font-family: Imprima, sans-serif;
+}
+
+.logo {
+  font-family: "Delius Swash Caps", cursive;
+  font-size: 25px;
+  font-weight: 600;
+  padding-left: 0.5rem;
+}
+
+.sign-up,
+.log-in {
+  color: rgb(34 34 36);
+}
+
+.sign-up:hover {
+  color: #eb034f;
+  font-weight: 600;
+}
+
+.log-in:hover {
+  color: #eb034f;
+  font-weight: 600;
+}
+
+.image-container {
+  display: flex;
+  width: 100%;
+  padding: 0;
+}
+
+.image {
+  flex-basis: calc(100% / 3);
+}
+
+.image img {
+  width: 100%;
+}
+
+.button-container {
+  justify-content: center;
+  display: flex;
+}
+
+.button {
+  padding: 5px;
+  color: #ccc;
+  font-size: 1em;
+}
+
+.plan-container {
+  width: 520px;
+  position: relative;
+  display: flex;
+  margin: 80px auto;
+  text-align: center;
+  box-shadow: 5px 5px 20px 1px #82878b;
+}
+
+.calender {
+  height: 50px;
+  width: 200px;
+  font-size: 1.3rem;
+}
+
+.plan-button {
+  border: none;
+  width: 120px;
+  height: 50px;
+  background-color: #eb034f;
+  font-size: 25px;
+}
+
+.plan-button a {
+  color: #fff;
+  vertical-align: text-top;
+  letter-spacing: 0.2rem;
+  padding-left: 5px;
+}
+
+input {
+  display: inline-block;
+  border: 1px solid #ccc;
+  border-right: none;
+  padding-top: 1.2rem;
+  padding-left: 2.5rem;
+  color: #424242;
+}
+
+input:focus {
+  outline: none;
+}
+
+label {
+  position: absolute;
+  padding-left: 5px;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.calender-container {
+  display: relative;
+}
