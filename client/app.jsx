@@ -9,13 +9,21 @@ export default class App extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      route: parseRoute(window.location.hash)
+      route: parseRoute(window.location.hash),
+      user: {}
     };
+    this.signIn = this.signIn.bind(this);
   }
 
   componentDidMount() {
     window.addEventListener('hashchange', () => {
       this.setState({ route: parseRoute(window.location.hash) });
+    });
+  }
+
+  signIn(user) {
+    this.setState({
+      user: user.payload
     });
   }
 
@@ -25,7 +33,7 @@ export default class App extends React.Component {
       return <Home />;
     }
     if (route.path === 'login') {
-      return <Login />;
+      return <Login signIn={this.signIn}/>;
     }
     if (route.path === 'plan') {
       return <Plan />;
