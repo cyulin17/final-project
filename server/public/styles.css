@@ -7,11 +7,12 @@ body {
   font-size: 25px;
   font-weight: 600;
   padding-left: 0.5rem;
+  color: rgb(0 0 0);
 }
 
 .sign-up,
 .log-in {
-  color: rgb(34 34 36);
+  color: rgb(0 0 0);
 }
 
 .sign-up:hover {
@@ -79,8 +80,7 @@ body {
   padding-left: 5px;
 }
 
-input {
-  display: inline-block;
+input[type="date"] {
   border: 1px solid #ccc;
   border-right: none;
   padding-top: 1.2rem;
@@ -101,4 +101,69 @@ label {
 
 .calender-container {
   display: relative;
+}
+
+.login-container {
+  width: 430px;
+  height: 425px;
+  border: 1px solid #7e7e7e;
+  border-radius: 5px;
+  margin: 150px auto;
+  padding: 35px 18px;
+  text-align: center;
+}
+
+input[type="text"],
+input[type="password"] {
+  width: 390px;
+  height: 50px;
+  border: 1px solid #7e7e7e;
+  padding-left: 0.8rem;
+  border-radius: 5px;
+}
+
+.submit {
+  width: 390px;
+  height: 50px;
+  background-color: #eb034f;
+  border: none;
+  color: #fff;
+  font-size: 20px;
+  border-radius: 5px;
+}
+
+.button-container button:hover {
+  background-color: #db0049;
+}
+
+input::placeholder {
+  color: #b0b0b0;
+}
+
+.email {
+  margin-top: 30px;
+  margin-bottom: 10px;
+}
+
+.password {
+  margin-bottom: 30px;
+}
+
+.line {
+  width: 300px;
+  border: 1px solid #7e7e7e;
+  border-top: none;
+  border-right: none;
+  border-left: none;
+  margin: 35px auto;
+  margin-bottom: 5px;
+}
+
+.user {
+  color: #4cbefe;
+  margin-top: 0;
+}
+
+.user a:hover {
+  color: #eb034f;
 }

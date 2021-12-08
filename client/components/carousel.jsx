@@ -101,6 +101,10 @@ export default class Carousel extends React.Component {
     this.startTimer();
   }
 
+  componentWillUnmount() {
+    clearInterval(this.timer);
+  }
+
   startTimer() {
     this.timer = setInterval(
       () => this.nextImg(),
