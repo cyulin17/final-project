@@ -1,9 +1,14 @@
 import React from 'react';
+import Search from '../components/search';
+import Map from '../components/map';
 
 export default class Plan extends React.Component {
   render() {
     return (
-      <h1>This is the Plan page</h1>
+      <>
+      <Search />
+      <Map />
+      </>
     );
   }
 }
