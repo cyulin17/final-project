@@ -13,10 +13,32 @@ const regions = [
 
 export default class Search extends React.Component {
 
+  constructor(props) {
+    super(props);
+    this.state = {
+      onFocus: false
+    };
+
+    this.onFocus = this.onFocus.bind(this);
+    this.onBlur = this.onBlur.bind(this);
+  }
+
+  onFocus() {
+    this.setState({
+      onFocus: true
+    });
+  }
+
+  onBlur() {
+    this.setState({
+      onFocus: false
+    });
+  }
+
   render() {
 
     const areas = regions.map(area =>
-      <li key={area.number}>{area.name}</li>
+      <li key={area.number} className="area-item">{area.name}</li>
     );
     return (
       <nav className="navbar navbar-light">
@@ -27,9 +49,9 @@ export default class Search extends React.Component {
           <div className="search-container">
             <div>
               <label htmlFor="area"></label>
-              <input className="area" type="search" name="area" id="area" placeholder="Area" />
-              <ul className='area-menu'>
-                <li>{areas}</li>
+              <input onFocus={() => this.onFocus()} onBlur={() => this.onBlur()} className="area" type="search" name="area" id="area" placeholder="Area" />
+              <ul className={this.state.onFocus ? 'area-menu' : 'hidden'}>
+                {areas}
               </ul>
             </div>
             <div>

@@ -202,6 +202,8 @@ input[type="search"] {
 
 .area-menu {
   position: absolute;
+  padding: 0;
+  margin: 0;
   width: 186px;
   border: 1px solid #b0b0b0;
   border-top-left-radius: 10px;
@@ -221,7 +223,6 @@ input[type="search"] {
   width: 450px;
   height: 720px;
   border-radius: 5px;
-  box-shadow: ;
 }
 
 .map-container {
@@ -258,4 +259,21 @@ input[type="search"] {
 .right-arrow {
   color: #fff;
   font-size: 1.8rem;
+}
+
+.hidden {
+  display: none;
+}
+
+.area-item {
+  border-bottom: 1px solid #ccc;
+  padding: 5px 15px;
+}
+
+.area-item:last-child {
+  border-bottom: none;
+}
+
+.area-item:hover {
+  background-color: #e6e7e8;
 }
