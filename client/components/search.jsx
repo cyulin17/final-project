@@ -16,29 +16,51 @@ export default class Search extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      onFocus: false
+      onFocus: false,
+      setArea: '',
+      setCategory: '',
+      keyword: ''
     };
 
     this.onFocus = this.onFocus.bind(this);
-    this.onBlur = this.onBlur.bind(this);
+    this.handleInputChange = this.handleInputChange.bind(this);
+    this.handleSubmit = this.handleSubmit.bind(this);
+    this.handleClick = this.handleClick.bind(this);
   }
 
   onFocus() {
+
     this.setState({
       onFocus: true
     });
   }
 
-  onBlur() {
+  handleClick(areaName) {
     this.setState({
+      setArea: areaName,
       onFocus: false
     });
+
+  }
+
+  handleInputChange(event) {
+
+    const value = event.target.value;
+    const name = event.target.name;
+    this.setState({
+      [name]: value
+    });
+
+  }
+
+  handleSubmit(event) {
+    event.preventDefault();
   }
 
   render() {
 
     const areas = regions.map(area =>
-      <li key={area.number} className="area-item">{area.name}</li>
+      <li onClick={() => this.handleClick(area.name)} key={area.number} className="area-item">{area.name}</li>
     );
     return (
       <nav className="navbar navbar-light">
@@ -46,24 +68,46 @@ export default class Search extends React.Component {
           <a className="navbar-brand logo" href="#">
             GotoJapan
           </a>
+          <form onSubmit={this.handleSubmit}>
           <div className="search-container">
             <div>
               <label htmlFor="area"></label>
-              <input onFocus={() => this.onFocus()} onBlur={() => this.onBlur()} className="area" type="search" name="area" id="area" placeholder="Area" />
+                <input
+                onFocus={this.onFocus}
+                className="area"
+                type="search"
+                name="setArea"
+                id="area"
+                placeholder="Area"
+                onChange={this.handleInputChange}
+                value={this.state.setArea}/>
               <ul className={this.state.onFocus ? 'area-menu' : 'hidden'}>
                 {areas}
               </ul>
             </div>
             <div>
               <label htmlFor="catogory"></label>
-              <input className="catogory" type="search" name="catogory" id="catogory" placeholder="Catogory" />
+                <input
+                className="catogory"
+                type="search" name="setCategory"
+                id="catogory" placeholder="Catogory"
+                onChange={this.handleInputChange}
+                value={this.state.setCategory}/>
             </div>
             <div>
               <label htmlFor="keyword"></label>
-              <input className="keyword" type="search" name="keyword" id="keyword" placeholder="Tokyo Tower" />
+                <input
+                className="keyword"
+                type="search"
+                name="keyword"
+                id="keyword"
+                placeholder="Tokyo Tower"
+                onChange={this.handleInputChange}
+                value={this.state.keyword}/>
               <span className="search-icon"><i className="fas fa-search icon-size"></i></span>
             </div>
         </div>
+          </form>
         </div>
       </nav>
     );

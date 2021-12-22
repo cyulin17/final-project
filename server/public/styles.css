@@ -205,6 +205,7 @@ input[type="search"] {
   padding: 0;
   margin: 0;
   width: 186px;
+  cursor: pointer;
   border: 1px solid #b0b0b0;
   border-top-left-radius: 10px;
   border-bottom-left-radius: 10px;
