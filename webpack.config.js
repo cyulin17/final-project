@@ -1,5 +1,6 @@
 require('dotenv/config');
 const path = require('path');
+const webpack = require('webpack');
 
 const clientPath = path.join(__dirname, 'client');
 const serverPublicPath = path.join(__dirname, 'server/public');
@@ -44,5 +45,13 @@ module.exports = {
   stats: 'summary',
   performance: {
     hints: false
-  }
+  },
+  plugins: [
+    new webpack.DefinePlugin({
+      'process.env': {
+        GOOGLE_TOKEN: JSON.stringify(process.env.GOOGLE_TOKEN)
+      }
+    })
+  ]
+
 };
