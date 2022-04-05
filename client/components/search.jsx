@@ -55,6 +55,16 @@ export default class Search extends React.Component {
 
   handleSubmit(event) {
     event.preventDefault();
+
+    const googleURL = encodeURIComponent(`https://maps.googleapis.com/maps/api/place/textsearch/json?query=${this.state.setArea}&key=${process.env.GOOGLE_TOKEN}`);
+
+    fetch('https://lfz-cors.herokuapp.com/?url=' + googleURL, { method: 'GET' })
+      .then(res => res.json())
+      .then(place =>
+        this.setState({
+          setArea: ''
+        }));
+    alert('Submitted:' + this.state.setArea);
   }
 
   render() {
@@ -104,7 +114,7 @@ export default class Search extends React.Component {
                 placeholder="Tokyo Tower"
                 onChange={this.handleInputChange}
                 value={this.state.keyword}/>
-              <span className="search-icon"><i className="fas fa-search icon-size"></i></span>
+                <span className="search-icon"><button><i className="fas fa-search icon-size"></i></button></span>
             </div>
         </div>
           </form>

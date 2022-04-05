@@ -16,13 +16,12 @@ const Map = ({
       setMap(new window.google.maps.Map(ref.current, {}));
     }
     if (map) {
-      map.setOptions({ zoom: 3, center: { lat: 0, lng: 0 } });
+      map.setOptions({ zoom: 5, center: { lat: 36.328497997295536, lng: 139.63055490097025 } });
     }
   }, [ref, map]);
   return <div ref={ref} style={{ height: '100vh' }} />;
 
 };
-
 // const onIdle = m => {
 //   setZoom(m.getZoom());
 //   setCenter(m.getCenter().toJSON());
