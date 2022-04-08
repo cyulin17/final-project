@@ -8,7 +8,8 @@ const regions = [
   { number: '05', name: 'Kansai' },
   { number: '06', name: 'Chugoku' },
   { number: '07', name: 'Shikoku' },
-  { number: '08', name: 'Kyushu/Okinawa' }
+  { number: '08', name: 'Kyushu' },
+  { number: '09', name: 'Okinawa' }
 ];
 
 export default class Search extends React.Component {
@@ -56,15 +57,32 @@ export default class Search extends React.Component {
   handleSubmit(event) {
     event.preventDefault();
 
-    const googleURL = encodeURIComponent(`https://maps.googleapis.com/maps/api/place/textsearch/json?query=${this.state.setArea}&key=${process.env.GOOGLE_TOKEN}`);
+    const newPlace = this.state.setArea;
+    this.props.onSubmit(newPlace);
+    this.setState({
+      setArea: ''
+    });
+    // const googleURL = encodeURIComponent(`https://maps.googleapis.com/maps/api/place/textsearch/json?query=${this.state.setArea}&key=${process.env.GOOGLE_TOKEN}`);
 
-    fetch('https://lfz-cors.herokuapp.com/?url=' + googleURL, { method: 'GET' })
-      .then(res => res.json())
-      .then(place =>
-        this.setState({
-          setArea: ''
-        }));
-    alert('Submitted:' + this.state.setArea);
+    // fetch('https://lfz-cors.herokuapp.com/?url=' + googleURL, { method: 'GET' })
+    //   .then(res => res.json())
+    //   .then(newLocation => {
+    //     const location = newLocation.results[0].geometry.location;
+    //     const lat = location.lat;
+    //     const lng = location.lng;
+    //     this.setState({ lat: lat, lng: lng });
+    //     console.log(newLocation);
+    //   })
+    //   .catch(error => {
+    //     console.error('Error:', error);
+    // });
+    // console.log('updateLocation method called');
+
+    // this.props.onSubmit();
+    // this.setState({
+    //   setArea: ''
+    // });
+    // alert('Submitted:' + this.state.setArea);
   }
 
   render() {
