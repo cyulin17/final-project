@@ -2,17 +2,21 @@ import React from 'react';
 import GoogleMapReact from 'google-map-react';
 import Search from './search';
 
+function Marker() {
+  return <div className="map-marker" />;
+}
+
 export default class MyMap extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
+      places: [],
       center: {
-        lat: 36.32,
-        lng: 139.63
+        lat: 38.19773060427947,
+        lng: 137.638514642288
       },
       zoom: 5
     };
-
     this.updateLocation = this.updateLocation.bind(this);
   }
 
@@ -22,15 +26,17 @@ export default class MyMap extends React.Component {
     fetch('https://lfz-cors.herokuapp.com/?url=' + googleURL, { method: 'GET' })
       .then(res => res.json())
       .then(newLocation => {
-        const location = newLocation.results[0].geometry.location;
-        const lat = location.lat;
-        const lng = location.lng;
+        const myLatLng = newLocation.results[0].geometry.location;
+        const data = newLocation.results[0];
+        const lat = myLatLng.lat;
+        const lng = myLatLng.lng;
         this.setState({
+          places: data,
           center: {
             lat: lat,
             lng: lng
           },
-          zoom: 8
+          zoom: 10
         });
       })
       .catch(error => {
@@ -39,6 +45,13 @@ export default class MyMap extends React.Component {
   }
 
   render() {
+    // const renderMarkers = (map, maps) => {
+    //   const marker = new maps.Marker({
+    //     position: this.state.center,
+    //     map
+    //   });
+    //   return marker;
+    // };
 
     return (
       <div style={ { height: '100vh' }}>
@@ -47,7 +60,15 @@ export default class MyMap extends React.Component {
           bootstrapURLKeys={{ key: process.env.GOOGLE_TOKEN }}
           center={this.state.center}
           zoom={this.state.zoom}
-        />
+          yesIWantToUseGoogleMapApiInternals={true}
+          >
+
+              <Marker
+                lat={this.state.center.lat}
+                lng={this.state.center.lng}
+                />
+          </GoogleMapReact>
+
         <div className="panel">
           <div className="panel-header">
             <div className="travel-date">12/10/2021
@@ -62,7 +83,8 @@ export default class MyMap extends React.Component {
     );
   }
 }
-// Old Version
+
+/* // Old Version
 // import React from 'react';
 // import { Wrapper } from '@googlemaps/react-wrapper';
 // import Search from './search';
@@ -153,4 +175,24 @@ export default class MyMap extends React.Component {
 //     </div>
 //     );
 //   }
+// } */
+//
+// onGoogleApiLoaded = {({ map, maps }) => renderMarkers(map, maps)}
+// handleApiLoaded(map, maps) {
+
+//   this.setState({
+//     mapsLoaded: true,
+//     map,
+//     maps
+//   });
+// }
+//   places.forEach(place => {
+//     places.push(new maps.Marker({
+//       position: {
+//         lat: place.geometry.location.lat,
+//         lng: place.geometry.location.lng
+//       },
+//       map
+//     }));
+//   });
 // }
