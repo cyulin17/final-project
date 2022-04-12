@@ -278,3 +278,11 @@ input[type="search"] {
 .area-item:hover {
   background-color: #e6e7e8;
 }
+
+.map-marker {
+  background-image: url("https://www.nicepng.com/png/full/23-230399_google-maps-pin-png-red-map-marker-png.png");
+  background-size: contain;
+  background-repeat: no-repeat;
+  height: 45px;
+  width: 25px;
+}

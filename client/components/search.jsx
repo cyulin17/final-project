@@ -4,11 +4,12 @@ const regions = [
   { number: '01', name: 'Hokkaido' },
   { number: '02', name: 'Tohoku' },
   { number: '03', name: 'Kanto' },
-  { number: '04', name: 'Chubu' },
+  { number: '04', name: 'Aichi' },
   { number: '05', name: 'Kansai' },
   { number: '06', name: 'Chugoku' },
   { number: '07', name: 'Shikoku' },
-  { number: '08', name: 'Kyushu/Okinawa' }
+  { number: '08', name: 'Kyushu' },
+  { number: '09', name: 'Okinawa' }
 ];
 
 export default class Search extends React.Component {
@@ -55,6 +56,13 @@ export default class Search extends React.Component {
 
   handleSubmit(event) {
     event.preventDefault();
+
+    const newPlace = this.state.setArea;
+    this.props.onSubmit(newPlace);
+    this.setState({
+      setArea: ''
+    });
+
   }
 
   render() {
@@ -104,7 +112,7 @@ export default class Search extends React.Component {
                 placeholder="Tokyo Tower"
                 onChange={this.handleInputChange}
                 value={this.state.keyword}/>
-              <span className="search-icon"><i className="fas fa-search icon-size"></i></span>
+                <span className="search-icon"><button><i className="fas fa-search icon-size"></i></button></span>
             </div>
         </div>
           </form>

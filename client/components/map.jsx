@@ -1,50 +1,78 @@
 import React from 'react';
-import { Wrapper } from '@googlemaps/react-wrapper';
+import GoogleMapReact from 'google-map-react';
+import Search from './search';
 
-const render = Status => {
-  return <h1>{Status}</h1>;
-};
+function Marker() {
+  return <div className="map-marker" />;
+}
 
-const Map = ({
-  onIdle
-}) => {
-  const ref = React.useRef(null);
-  const [map, setMap] = React.useState();
+export default class MyMap extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      places: [],
+      center: {
+        lat: 38.19773060427947,
+        lng: 137.638514642288
+      },
+      zoom: 5
+    };
+    this.updateLocation = this.updateLocation.bind(this);
+  }
 
-  React.useEffect(() => {
-    if (ref.current && !map) {
-      setMap(new window.google.maps.Map(ref.current, {}));
-    }
-    if (map) {
-      map.setOptions({ zoom: 3, center: { lat: 0, lng: 0 } });
-    }
-  }, [ref, map]);
-  return <div ref={ref} style={{ height: '100vh' }} />;
+  updateLocation(newPlace) {
+    const googleURL = encodeURIComponent(`https://maps.googleapis.com/maps/api/place/textsearch/json?query=${newPlace}&key=${process.env.GOOGLE_TOKEN}`);
 
-};
+    fetch('https://lfz-cors.herokuapp.com/?url=' + googleURL, { method: 'GET' })
+      .then(res => res.json())
+      .then(newLocation => {
+        const myLatLng = newLocation.results[0].geometry.location;
+        const data = newLocation.results[0];
+        const lat = myLatLng.lat;
+        const lng = myLatLng.lng;
+        this.setState({
+          places: data,
+          center: {
+            lat: lat,
+            lng: lng
+          },
+          zoom: 9
+        });
+      })
+      .catch(error => {
+        console.error('Error:', error);
+      });
+  }
 
-// const onIdle = m => {
-//   setZoom(m.getZoom());
-//   setCenter(m.getCenter().toJSON());
+  render() {
 
-// };
+    return (
+      <div style={ { height: '100vh' }}>
+        <Search onSubmit={this.updateLocation}/>
+        <GoogleMapReact
+          bootstrapURLKeys={{ key: process.env.GOOGLE_TOKEN }}
+          center={this.state.center}
+          zoom={this.state.zoom}
+          yesIWantToUseGoogleMapApiInternals={true}
+          >
 
-export default function MyMap() {
-  return (
-      <div>
-      <Wrapper apiKey={process.env.GOOGLE_TOKEN} render={render}>
-          <Map />
-        </Wrapper>
-      <div className="panel">
-        <div className="panel-header">
-          <div className="travel-date">12/10/2021
-            <div className="arrow-container">
-              <span className="previous"><i className="fas fa-caret-left left-arrow"></i></span>
-              <span className="next"><i className="fas fa-caret-right right-arrow"></i></span>
+              <Marker
+                lat={this.state.center.lat}
+                lng={this.state.center.lng}
+                />
+          </GoogleMapReact>
+
+        <div className="panel">
+          <div className="panel-header">
+            <div className="travel-date">12/10/2021
+              <div className="arrow-container">
+                <span className="previous"><i className="fas fa-caret-left left-arrow"></i></span>
+                  <span className="next"><i className="fas fa-caret-right right-arrow"></i></span>
             </div>
           </div>
         </div>
+    </div>
       </div>
-      </div>
-  );
+    );
+  }
 }
