@@ -12,12 +12,18 @@ const regions = [
   { number: '09', name: 'Okinawa' }
 ];
 
+const catogory = [
+  { number: '01', name: 'Attractions' },
+  { number: '02', name: 'Shopping' },
+  { number: '03', name: 'Restaurants' }
+];
+
 export default class Search extends React.Component {
 
   constructor(props) {
     super(props);
     this.state = {
-      onFocus: false,
+      onFocus: null,
       setArea: '',
       setCategory: '',
       keyword: ''
@@ -29,11 +35,21 @@ export default class Search extends React.Component {
     this.handleClick = this.handleClick.bind(this);
   }
 
-  onFocus() {
+  onFocus(event) {
 
-    this.setState({
-      onFocus: true
-    });
+    if (this.state.onFocus === event.target) {
+      this.setState({
+        onFocus: null
+      });
+    } else {
+      this.setState({
+        onfocus: event.target
+      });
+    }
+    // this.setState({
+    //   onFocus: !this.state.onFocus,
+    //   firstLoad: false
+    // });
   }
 
   handleClick(areaName) {
@@ -70,6 +86,10 @@ export default class Search extends React.Component {
     const areas = regions.map(area =>
       <li onClick={() => this.handleClick(area.name)} key={area.number} className="area-item">{area.name}</li>
     );
+
+    const categories = catogory.map(myCategory =>
+      <li key={myCategory.number} className="area-item">{myCategory.name}</li>
+    );
     return (
       <nav className="navbar navbar-light">
         <div className="container-fluid justify-content-start">
@@ -96,11 +116,17 @@ export default class Search extends React.Component {
             <div>
               <label htmlFor="catogory"></label>
                 <input
+                onFocus={this.onFocus}
                 className="catogory"
-                type="search" name="setCategory"
-                id="catogory" placeholder="Catogory"
+                type="search"
+                name="setCategory"
+                id="catogory"
+                placeholder="Catogory"
                 onChange={this.handleInputChange}
                 value={this.state.setCategory}/>
+                <ul className={this.state.onFocus ? 'category-menu' : 'hidden'}>
+                  {categories}
+                </ul>
             </div>
             <div>
               <label htmlFor="keyword"></label>
