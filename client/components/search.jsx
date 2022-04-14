@@ -36,27 +36,36 @@ export default class Search extends React.Component {
   }
 
   onFocus(event) {
+    const target = event.target;
+    const value = target.id;
 
-    if (this.state.onFocus === event.target) {
+    if (this.state.onFocus === value) {
       this.setState({
         onFocus: null
       });
     } else {
       this.setState({
-        onfocus: event.target
+        onFocus: value
       });
     }
-    // this.setState({
-    //   onFocus: !this.state.onFocus,
-    //   firstLoad: false
-    // });
+
   }
 
-  handleClick(areaName) {
-    this.setState({
-      setArea: areaName,
-      onFocus: false
-    });
+  handleClick(selected) {
+
+    if (this.state.onFocus === 'area') {
+      this.setState({
+        setArea: selected,
+        onFocus: null
+      });
+    }
+
+    if (this.state.onFocus === 'category') {
+      this.setState({
+        setCategory: selected,
+        onFocus: null
+      });
+    }
 
   }
 
@@ -73,12 +82,23 @@ export default class Search extends React.Component {
   handleSubmit(event) {
     event.preventDefault();
 
-    const newPlace = this.state.setArea;
-    this.props.onSubmit(newPlace);
+    const newArea = this.state.setArea;
+    // const newCategory = this.state.setCategory;
+
+    if (this.state.setArea !== '') {
+      const query = newArea;
+      // console.log(query);
+      this.props.onSubmit(query);
+    } else {
+      alert('Please select an area.');
+      // const query = this.state.setCategory + 'in' + this.state.lat + '&' + 'radius=100000';
+      // this.props.onSubmit(query);
+      // console.log(query);
+    }
+
     this.setState({
       setArea: ''
     });
-
   }
 
   render() {
@@ -88,7 +108,7 @@ export default class Search extends React.Component {
     );
 
     const categories = catogory.map(myCategory =>
-      <li key={myCategory.number} className="area-item">{myCategory.name}</li>
+      <li onClick={() => this.handleClick(myCategory.name)} key={myCategory.number} className="area-item">{myCategory.name}</li>
     );
     return (
       <nav className="navbar navbar-light">
@@ -109,7 +129,7 @@ export default class Search extends React.Component {
                 placeholder="Area"
                 onChange={this.handleInputChange}
                 value={this.state.setArea}/>
-              <ul className={this.state.onFocus ? 'area-menu' : 'hidden'}>
+              <ul className={this.state.onFocus === 'area' ? 'area-menu' : 'hidden'}>
                 {areas}
               </ul>
             </div>
@@ -120,17 +140,18 @@ export default class Search extends React.Component {
                 className="catogory"
                 type="search"
                 name="setCategory"
-                id="catogory"
+                id="category"
                 placeholder="Catogory"
                 onChange={this.handleInputChange}
                 value={this.state.setCategory}/>
-                <ul className={this.state.onFocus ? 'category-menu' : 'hidden'}>
+                <ul className={this.state.onFocus === 'category' ? 'category-menu' : 'hidden'}>
                   {categories}
                 </ul>
             </div>
             <div>
               <label htmlFor="keyword"></label>
                 <input
+                onFocus={this.onFocus}
                 className="keyword"
                 type="search"
                 name="keyword"

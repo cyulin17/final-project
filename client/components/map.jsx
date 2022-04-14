@@ -20,16 +20,17 @@ export default class MyMap extends React.Component {
     this.updateLocation = this.updateLocation.bind(this);
   }
 
-  updateLocation(newPlace) {
-    const googleURL = encodeURIComponent(`https://maps.googleapis.com/maps/api/place/textsearch/json?query=${newPlace}&key=${process.env.GOOGLE_TOKEN}`);
+  updateLocation(query) {
+    const googleURL = encodeURIComponent(`https://maps.googleapis.com/maps/api/place/textsearch/json?query=${query}&key=${process.env.GOOGLE_TOKEN}`);
 
     fetch('https://lfz-cors.herokuapp.com/?url=' + googleURL, { method: 'GET' })
       .then(res => res.json())
       .then(newLocation => {
         const myLatLng = newLocation.results[0].geometry.location;
-        const data = newLocation.results[0];
+        const data = newLocation.results;
         const lat = myLatLng.lat;
         const lng = myLatLng.lng;
+        // console.log(data);
         this.setState({
           places: data,
           center: {
@@ -45,6 +46,7 @@ export default class MyMap extends React.Component {
   }
 
   render() {
+    const { places } = this.state;
 
     return (
       <div style={ { height: '100vh' }}>
@@ -56,10 +58,13 @@ export default class MyMap extends React.Component {
           yesIWantToUseGoogleMapApiInternals={true}
           >
 
+              {places.map(place => (
               <Marker
-                lat={this.state.center.lat}
-                lng={this.state.center.lng}
+                  key={place.place_id}
+                  lat={place.geometry.location.lat}
+                  lng={place.geometry.location.lng}
                 />
+              ))}
           </GoogleMapReact>
 
         <div className="panel">
