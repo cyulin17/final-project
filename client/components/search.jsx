@@ -15,7 +15,7 @@ const regions = [
 const catogory = [
   { number: '01', name: 'Attractions' },
   { number: '02', name: 'Shopping' },
-  { number: '03', name: 'Restaurants' }
+  { number: '03', name: 'Restaurant' }
 ];
 
 export default class Search extends React.Component {
@@ -82,27 +82,23 @@ export default class Search extends React.Component {
   handleSubmit(event) {
     event.preventDefault();
 
-    const newArea = this.state.setArea;
-    // const newCategory = this.state.setCategory;
+    if (this.state.setArea !== '' && this.state.setCategory === '') {
+      const query = this.state.setArea;
+      this.props.onUpdateLocation(query);
+      this.setState({ setArea: '' });
 
-    if (this.state.setArea !== '') {
-      const query = newArea;
-      // console.log(query);
-      this.props.onSubmit(query);
-    } else {
-      alert('Please select an area.');
-      // const query = this.state.setCategory + 'in' + this.state.lat + '&' + 'radius=100000';
-      // this.props.onSubmit(query);
-      // console.log(query);
     }
 
-    this.setState({
-      setArea: ''
-    });
+    if (this.state.setArea === '' && this.state.setCategory !== '') {
+      const category = this.state.setCategory;
+      const query = category.toLocaleLowerCase();
+      this.props.onCategorySearch(query);
+      this.setState({ setCategory: '' });
+    }
+
   }
 
   render() {
-
     const areas = regions.map(area =>
       <li onClick={() => this.handleClick(area.name)} key={area.number} className="area-item">{area.name}</li>
     );
@@ -159,7 +155,7 @@ export default class Search extends React.Component {
                 placeholder="Tokyo Tower"
                 onChange={this.handleInputChange}
                 value={this.state.keyword}/>
-                <span className="search-icon"><button><i className="fas fa-search icon-size"></i></button></span>
+                <span className="search-icon"><button type="submit"><i className="fas fa-search icon-size"></i></button></span>
             </div>
         </div>
           </form>

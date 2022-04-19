@@ -10,17 +10,32 @@ export default class MyMap extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
+      mapLoaded: false,
       places: [],
       center: {
         lat: 38.19773060427947,
         lng: 137.638514642288
       },
+      placesService: {},
       zoom: 5
     };
     this.updateLocation = this.updateLocation.bind(this);
+    this.apiLoaded = this.apiLoaded.bind(this);
+    this.categorySearch = this.categorySearch.bind(this);
+
+  }
+
+  apiLoaded(map, maps) {
+    this.setState({
+      mapsLoaded: true,
+      map,
+      maps,
+      placesService: new maps.places.PlacesService(map)
+    });
   }
 
   updateLocation(query) {
+
     const googleURL = encodeURIComponent(`https://maps.googleapis.com/maps/api/place/textsearch/json?query=${query}&key=${process.env.GOOGLE_TOKEN}`);
 
     fetch('https://lfz-cors.herokuapp.com/?url=' + googleURL, { method: 'GET' })
@@ -30,7 +45,7 @@ export default class MyMap extends React.Component {
         const data = newLocation.results;
         const lat = myLatLng.lat;
         const lng = myLatLng.lng;
-        // console.log(data);
+        // console.log(newLocation);
         this.setState({
           places: data,
           center: {
@@ -45,17 +60,52 @@ export default class MyMap extends React.Component {
       });
   }
 
+  categorySearch(query) {
+
+    const lat = this.state.center.lat;
+    const lng = this.state.center.lng;
+    const latlng = lat + '%2C' + lng;
+
+    const googleURL = encodeURIComponent(`https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=${latlng}&radius=300000&type=${query}&key=${process.env.GOOGLE_TOKEN}`);
+
+    fetch('https://lfz-cors.herokuapp.com/?url=' + googleURL, { method: 'GET' })
+      .then(res => res.json())
+      .then(category => {
+        const myLatLng = category.results[0].geometry.location;
+        const data = category.results;
+        const lat = myLatLng.lat;
+        const lng = myLatLng.lng;
+        this.setState({
+          places: data,
+          center: {
+            lat: lat,
+            lng: lng
+          },
+          zoom: 15
+        });
+      })
+      .catch(error => {
+        console.error('Error:', error);
+      });
+
+  }
+
   render() {
+
     const { places } = this.state;
 
     return (
       <div style={ { height: '100vh' }}>
-        <Search onSubmit={this.updateLocation}/>
+        <Search onUpdateLocation={this.updateLocation} onCategorySearch={this.categorySearch}/>
         <GoogleMapReact
-          bootstrapURLKeys={{ key: process.env.GOOGLE_TOKEN }}
+          bootstrapURLKeys={{
+            key: process.env.GOOGLE_TOKEN,
+            libraries: ['places']
+          }}
           center={this.state.center}
           zoom={this.state.zoom}
           yesIWantToUseGoogleMapApiInternals={true}
+          onGoogleApiLoaded={({ map, maps }) => this.apiLoaded(map, maps)}
           >
 
               {places.map(place => (
