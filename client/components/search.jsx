@@ -12,12 +12,18 @@ const regions = [
   { number: '09', name: 'Okinawa' }
 ];
 
+const catogory = [
+  { number: '01', name: 'Attractions' },
+  { number: '02', name: 'Shopping' },
+  { number: '03', name: 'Restaurants' }
+];
+
 export default class Search extends React.Component {
 
   constructor(props) {
     super(props);
     this.state = {
-      onFocus: false,
+      onFocus: null,
       setArea: '',
       setCategory: '',
       keyword: ''
@@ -29,18 +35,37 @@ export default class Search extends React.Component {
     this.handleClick = this.handleClick.bind(this);
   }
 
-  onFocus() {
+  onFocus(event) {
+    const target = event.target;
+    const value = target.id;
 
-    this.setState({
-      onFocus: true
-    });
+    if (this.state.onFocus === value) {
+      this.setState({
+        onFocus: null
+      });
+    } else {
+      this.setState({
+        onFocus: value
+      });
+    }
+
   }
 
-  handleClick(areaName) {
-    this.setState({
-      setArea: areaName,
-      onFocus: false
-    });
+  handleClick(selected) {
+
+    if (this.state.onFocus === 'area') {
+      this.setState({
+        setArea: selected,
+        onFocus: null
+      });
+    }
+
+    if (this.state.onFocus === 'category') {
+      this.setState({
+        setCategory: selected,
+        onFocus: null
+      });
+    }
 
   }
 
@@ -57,18 +82,44 @@ export default class Search extends React.Component {
   handleSubmit(event) {
     event.preventDefault();
 
-    const newPlace = this.state.setArea;
-    this.props.onSubmit(newPlace);
-    this.setState({
-      setArea: ''
-    });
+    if (this.state.setArea !== '' && this.state.setCategory === '') {
+      const query = this.state.setArea;
+      this.props.onAreaSearch(query);
+      this.setState({ setArea: '' });
+
+    }
+
+    if (this.state.setArea === '' && this.state.setCategory !== '') {
+      const category = this.state.setCategory;
+      if (category === 'Attractions') {
+        const query = 'tourist_attraction';
+        this.props.onCategorySearch(query);
+        this.setState({ setCategory: '' });
+      }
+
+      if (category === 'Shopping') {
+        const query = 'shopping_mall';
+        this.props.onCategorySearch(query);
+        this.setState({ setCategory: '' });
+      }
+
+      if (category === 'Restaurants') {
+        const query = 'restaurant';
+        this.props.onCategorySearch(query);
+        this.setState({ setCategory: '' });
+      }
+
+    }
 
   }
 
   render() {
-
     const areas = regions.map(area =>
       <li onClick={() => this.handleClick(area.name)} key={area.number} className="area-item">{area.name}</li>
+    );
+
+    const categories = catogory.map(myCategory =>
+      <li onClick={() => this.handleClick(myCategory.name)} key={myCategory.number} className="area-item">{myCategory.name}</li>
     );
     return (
       <nav className="navbar navbar-light">
@@ -89,22 +140,29 @@ export default class Search extends React.Component {
                 placeholder="Area"
                 onChange={this.handleInputChange}
                 value={this.state.setArea}/>
-              <ul className={this.state.onFocus ? 'area-menu' : 'hidden'}>
+              <ul className={this.state.onFocus === 'area' ? 'area-menu' : 'hidden'}>
                 {areas}
               </ul>
             </div>
             <div>
               <label htmlFor="catogory"></label>
                 <input
+                onFocus={this.onFocus}
                 className="catogory"
-                type="search" name="setCategory"
-                id="catogory" placeholder="Catogory"
+                type="search"
+                name="setCategory"
+                id="category"
+                placeholder="Catogory"
                 onChange={this.handleInputChange}
                 value={this.state.setCategory}/>
+                <ul className={this.state.onFocus === 'category' ? 'category-menu' : 'hidden'}>
+                  {categories}
+                </ul>
             </div>
             <div>
               <label htmlFor="keyword"></label>
                 <input
+                onFocus={this.onFocus}
                 className="keyword"
                 type="search"
                 name="keyword"
@@ -112,7 +170,7 @@ export default class Search extends React.Component {
                 placeholder="Tokyo Tower"
                 onChange={this.handleInputChange}
                 value={this.state.keyword}/>
-                <span className="search-icon"><button><i className="fas fa-search icon-size"></i></button></span>
+                <span className="search-icon"><button type="submit"><i className="fas fa-search icon-size"></i></button></span>
             </div>
         </div>
           </form>
