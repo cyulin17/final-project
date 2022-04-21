@@ -19,7 +19,7 @@ export default class MyMap extends React.Component {
       placesService: {},
       zoom: 5
     };
-    this.updateLocation = this.updateLocation.bind(this);
+    this.areaSearch = this.areaSearch.bind(this);
     this.apiLoaded = this.apiLoaded.bind(this);
     this.categorySearch = this.categorySearch.bind(this);
 
@@ -34,7 +34,7 @@ export default class MyMap extends React.Component {
     });
   }
 
-  updateLocation(query) {
+  areaSearch(query) {
 
     const googleURL = encodeURIComponent(`https://maps.googleapis.com/maps/api/place/textsearch/json?query=${query}&key=${process.env.GOOGLE_TOKEN}`);
 
@@ -42,12 +42,9 @@ export default class MyMap extends React.Component {
       .then(res => res.json())
       .then(newLocation => {
         const myLatLng = newLocation.results[0].geometry.location;
-        const data = newLocation.results;
         const lat = myLatLng.lat;
         const lng = myLatLng.lng;
-        // console.log(newLocation);
         this.setState({
-          places: data,
           center: {
             lat: lat,
             lng: lng
@@ -66,7 +63,7 @@ export default class MyMap extends React.Component {
     const lng = this.state.center.lng;
     const latlng = lat + '%2C' + lng;
 
-    const googleURL = encodeURIComponent(`https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=${latlng}&radius=300000&type=${query}&key=${process.env.GOOGLE_TOKEN}`);
+    const googleURL = encodeURIComponent(`https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=${latlng}&radius=500000&type=${query}&key=${process.env.GOOGLE_TOKEN}`);
 
     fetch('https://lfz-cors.herokuapp.com/?url=' + googleURL, { method: 'GET' })
       .then(res => res.json())
@@ -81,7 +78,7 @@ export default class MyMap extends React.Component {
             lat: lat,
             lng: lng
           },
-          zoom: 15
+          zoom: 12
         });
       })
       .catch(error => {
@@ -96,7 +93,7 @@ export default class MyMap extends React.Component {
 
     return (
       <div style={ { height: '100vh' }}>
-        <Search onUpdateLocation={this.updateLocation} onCategorySearch={this.categorySearch}/>
+        <Search onAreaSearch={this.areaSearch} onCategorySearch={this.categorySearch}/>
         <GoogleMapReact
           bootstrapURLKeys={{
             key: process.env.GOOGLE_TOKEN,

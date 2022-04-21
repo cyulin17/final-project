@@ -15,7 +15,7 @@ const regions = [
 const catogory = [
   { number: '01', name: 'Attractions' },
   { number: '02', name: 'Shopping' },
-  { number: '03', name: 'Restaurant' }
+  { number: '03', name: 'Restaurants' }
 ];
 
 export default class Search extends React.Component {
@@ -84,16 +84,31 @@ export default class Search extends React.Component {
 
     if (this.state.setArea !== '' && this.state.setCategory === '') {
       const query = this.state.setArea;
-      this.props.onUpdateLocation(query);
+      this.props.onAreaSearch(query);
       this.setState({ setArea: '' });
 
     }
 
     if (this.state.setArea === '' && this.state.setCategory !== '') {
       const category = this.state.setCategory;
-      const query = category.toLocaleLowerCase();
-      this.props.onCategorySearch(query);
-      this.setState({ setCategory: '' });
+      if (category === 'Attractions') {
+        const query = 'tourist_attraction';
+        this.props.onCategorySearch(query);
+        this.setState({ setCategory: '' });
+      }
+
+      if (category === 'Shopping') {
+        const query = 'shopping_mall';
+        this.props.onCategorySearch(query);
+        this.setState({ setCategory: '' });
+      }
+
+      if (category === 'Restaurants') {
+        const query = 'restaurant';
+        this.props.onCategorySearch(query);
+        this.setState({ setCategory: '' });
+      }
+
     }
 
   }
