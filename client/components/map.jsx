@@ -1,7 +1,6 @@
 import React from 'react';
 import GoogleMapReact from 'google-map-react';
 import Search from './search';
-// import infoWindow from './infowindow';
 
 function Marker() {
   return <div className="map-marker" />;
@@ -33,41 +32,9 @@ export default class MyMap extends React.Component {
       mapsLoaded: true,
       map,
       maps,
-      placesService: new maps.places.PlacesService(map),
-      infowindow: new maps.InfoWindow()
+      placesService: new maps.places.PlacesService(map)
     });
   }
-
-  // apiLoaded(map, maps) {
-
-  // const { markers } = this.state;
-  // // const markers = [];
-  // const infowindows = [];
-
-  // const { places } = this.state;
-  // places.forEach(place => {
-  //   markers.push(new maps.Marker({
-  //     position: {
-  //       lat: place.geometry.location.lat,
-  //       lng: place.geometry.location.lng
-  //     },
-  //     map
-  //   }));
-  // });
-
-  // infowindows.push(new maps.InfoWindow({
-  //   content: '123'
-  // }));
-
-  // markers.forEach((marker, i) => {
-  //   marker.addListener('click', () => {
-  //     infowindows[i].open(map, marker);
-  //   });
-  // });
-  // console.log('markers and infowindow');
-  // console.log(markers);
-  // console.log(places);
-  // }
 
   areaSearch(query) {
 
