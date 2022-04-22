@@ -296,6 +296,8 @@ input[type="search"] {
 }
 
 .map-marker {
+  position: absolute;
+  transform: translate(-50%, -50%);
   background-image: url("https://www.nicepng.com/png/full/23-230399_google-maps-pin-png-red-map-marker-png.png");
   background-size: contain;
   background-repeat: no-repeat;

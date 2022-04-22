@@ -1,6 +1,7 @@
 import React from 'react';
 import GoogleMapReact from 'google-map-react';
 import Search from './search';
+// import infoWindow from './infowindow';
 
 function Marker() {
   return <div className="map-marker" />;
@@ -12,6 +13,7 @@ export default class MyMap extends React.Component {
     this.state = {
       mapLoaded: false,
       places: [],
+      markers: [],
       center: {
         lat: 38.19773060427947,
         lng: 137.638514642288
@@ -22,6 +24,7 @@ export default class MyMap extends React.Component {
     this.areaSearch = this.areaSearch.bind(this);
     this.apiLoaded = this.apiLoaded.bind(this);
     this.categorySearch = this.categorySearch.bind(this);
+    this.keywordSearch = this.keywordSearch.bind(this);
 
   }
 
@@ -30,9 +33,41 @@ export default class MyMap extends React.Component {
       mapsLoaded: true,
       map,
       maps,
-      placesService: new maps.places.PlacesService(map)
+      placesService: new maps.places.PlacesService(map),
+      infowindow: new maps.InfoWindow()
     });
   }
+
+  // apiLoaded(map, maps) {
+
+  // const { markers } = this.state;
+  // // const markers = [];
+  // const infowindows = [];
+
+  // const { places } = this.state;
+  // places.forEach(place => {
+  //   markers.push(new maps.Marker({
+  //     position: {
+  //       lat: place.geometry.location.lat,
+  //       lng: place.geometry.location.lng
+  //     },
+  //     map
+  //   }));
+  // });
+
+  // infowindows.push(new maps.InfoWindow({
+  //   content: '123'
+  // }));
+
+  // markers.forEach((marker, i) => {
+  //   marker.addListener('click', () => {
+  //     infowindows[i].open(map, marker);
+  //   });
+  // });
+  // console.log('markers and infowindow');
+  // console.log(markers);
+  // console.log(places);
+  // }
 
   areaSearch(query) {
 
@@ -87,13 +122,37 @@ export default class MyMap extends React.Component {
 
   }
 
+  keywordSearch(query) {
+    const googleURL = encodeURIComponent(`https://maps.googleapis.com/maps/api/place/textsearch/json?query=${query}&key=${process.env.GOOGLE_TOKEN}`);
+
+    fetch('https://lfz-cors.herokuapp.com/?url=' + googleURL, { method: 'GET' })
+      .then(res => res.json())
+      .then(keyword => {
+        const myLatLng = keyword.results[0].geometry.location;
+        const lat = myLatLng.lat;
+        const lng = myLatLng.lng;
+        const data = keyword.results;
+        this.setState({
+          places: data,
+          center: {
+            lat: lat,
+            lng: lng
+          },
+          zoom: 18
+        });
+      })
+      .catch(error => {
+        console.error('Error:', error);
+      });
+  }
+
   render() {
 
     const { places } = this.state;
 
     return (
       <div style={ { height: '100vh' }}>
-        <Search onAreaSearch={this.areaSearch} onCategorySearch={this.categorySearch}/>
+        <Search onAreaSearch={this.areaSearch} onCategorySearch={this.categorySearch} onKeywordSearch={this.keywordSearch}/>
         <GoogleMapReact
           bootstrapURLKeys={{
             key: process.env.GOOGLE_TOKEN,
@@ -104,7 +163,6 @@ export default class MyMap extends React.Component {
           yesIWantToUseGoogleMapApiInternals={true}
           onGoogleApiLoaded={({ map, maps }) => this.apiLoaded(map, maps)}
           >
-
               {places.map(place => (
               <Marker
                   key={place.place_id}
