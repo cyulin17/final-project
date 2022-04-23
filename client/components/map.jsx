@@ -1,6 +1,7 @@
 import React from 'react';
 import GoogleMapReact from 'google-map-react';
 import Search from './search';
+import InfoWindow from './infowindow';
 
 function Marker() {
   return <div className="map-marker" />;
@@ -13,6 +14,7 @@ export default class MyMap extends React.Component {
       mapLoaded: false,
       places: [],
       markers: [],
+      searchResults: [],
       center: {
         lat: 38.19773060427947,
         lng: 137.638514642288
@@ -130,6 +132,7 @@ export default class MyMap extends React.Component {
           yesIWantToUseGoogleMapApiInternals={true}
           onGoogleApiLoaded={({ map, maps }) => this.apiLoaded(map, maps)}
           >
+
               {places.map(place => (
               <Marker
                   key={place.place_id}
@@ -139,6 +142,12 @@ export default class MyMap extends React.Component {
               ))}
           </GoogleMapReact>
 
+        {places.map(place => (
+        <InfoWindow
+          info={place}
+          key={place.place_id}
+        />
+        ))}
         <div className="panel">
           <div className="panel-header">
             <div className="travel-date">12/10/2021

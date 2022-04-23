@@ -304,3 +304,11 @@ input[type="search"] {
   height: 45px;
   width: 25px;
 }
+
+.infowindow {
+  position: absolute;
+  top: 63.5px;
+  right: 0;
+  width: 550px;
+  background-color: #fff;
+}

@@ -1,6 +1,6 @@
 import React from 'react';
 
-export default class infoWindow extends React.Component {
+export default class InfoWindow extends React.Component {
 
   constructor(props) {
     super(props);
@@ -10,9 +10,16 @@ export default class infoWindow extends React.Component {
   }
 
   render() {
+
     return (
       <div>
-        <div className="infowindow">infowindow</div>
+        <div className="infowindow">infowindow
+          <h3>Tokyo Sky tree</h3>
+          <div className='image_container'>images</div>
+          <div>Hours</div>
+          <div>Address</div>
+          <div>Website</div>
+        </div>
       </div>
     );
   }
