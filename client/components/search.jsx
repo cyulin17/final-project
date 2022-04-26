@@ -111,6 +111,12 @@ export default class Search extends React.Component {
 
     }
 
+    if (this.state.keyword !== '') {
+      const keyword = this.state.keyword;
+      this.props.onKeywordSearch(keyword);
+      this.setState({ keyword: '' });
+    }
+
   }
 
   render() {

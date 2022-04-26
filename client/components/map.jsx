@@ -12,6 +12,7 @@ export default class MyMap extends React.Component {
     this.state = {
       mapLoaded: false,
       places: [],
+      markers: [],
       center: {
         lat: 38.19773060427947,
         lng: 137.638514642288
@@ -22,6 +23,7 @@ export default class MyMap extends React.Component {
     this.areaSearch = this.areaSearch.bind(this);
     this.apiLoaded = this.apiLoaded.bind(this);
     this.categorySearch = this.categorySearch.bind(this);
+    this.keywordSearch = this.keywordSearch.bind(this);
 
   }
 
@@ -87,13 +89,37 @@ export default class MyMap extends React.Component {
 
   }
 
+  keywordSearch(query) {
+    const googleURL = encodeURIComponent(`https://maps.googleapis.com/maps/api/place/textsearch/json?query=${query}&key=${process.env.GOOGLE_TOKEN}`);
+
+    fetch('https://lfz-cors.herokuapp.com/?url=' + googleURL, { method: 'GET' })
+      .then(res => res.json())
+      .then(keyword => {
+        const myLatLng = keyword.results[0].geometry.location;
+        const lat = myLatLng.lat;
+        const lng = myLatLng.lng;
+        const data = keyword.results;
+        this.setState({
+          places: data,
+          center: {
+            lat: lat,
+            lng: lng
+          },
+          zoom: 18
+        });
+      })
+      .catch(error => {
+        console.error('Error:', error);
+      });
+  }
+
   render() {
 
     const { places } = this.state;
 
     return (
       <div style={ { height: '100vh' }}>
-        <Search onAreaSearch={this.areaSearch} onCategorySearch={this.categorySearch}/>
+        <Search onAreaSearch={this.areaSearch} onCategorySearch={this.categorySearch} onKeywordSearch={this.keywordSearch}/>
         <GoogleMapReact
           bootstrapURLKeys={{
             key: process.env.GOOGLE_TOKEN,
@@ -104,7 +130,6 @@ export default class MyMap extends React.Component {
           yesIWantToUseGoogleMapApiInternals={true}
           onGoogleApiLoaded={({ map, maps }) => this.apiLoaded(map, maps)}
           >
-
               {places.map(place => (
               <Marker
                   key={place.place_id}
