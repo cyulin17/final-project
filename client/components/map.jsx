@@ -1,11 +1,12 @@
 import React from 'react';
 import GoogleMapReact from 'google-map-react';
 import Search from './search';
+import Marker from './marker';
 import InfoWindow from './infowindow';
 
-function Marker() {
-  return <div className="map-marker" />;
-}
+// function Marker() {
+//   return <div className="map-marker" />;
+// }
 
 export default class MyMap extends React.Component {
   constructor(props) {
@@ -15,6 +16,7 @@ export default class MyMap extends React.Component {
       places: [],
       markers: [],
       searchResults: [],
+      id: null,
       center: {
         lat: 38.19773060427947,
         lng: 137.638514642288
@@ -26,6 +28,7 @@ export default class MyMap extends React.Component {
     this.apiLoaded = this.apiLoaded.bind(this);
     this.categorySearch = this.categorySearch.bind(this);
     this.keywordSearch = this.keywordSearch.bind(this);
+    // this.handleClick = this.handleClick.bind(this);
 
   }
 
@@ -76,6 +79,11 @@ export default class MyMap extends React.Component {
         const data = category.results;
         const lat = myLatLng.lat;
         const lng = myLatLng.lng;
+        // for (let i = 0; i < data; i++) {
+        //   const storeName = data[i].name;
+        //   const address = data[i].
+        // }
+        // const storeName =
         this.setState({
           places: data,
           center: {
@@ -97,11 +105,29 @@ export default class MyMap extends React.Component {
     fetch('https://lfz-cors.herokuapp.com/?url=' + googleURL, { method: 'GET' })
       .then(res => res.json())
       .then(keyword => {
+
+        const results = [];
         const myLatLng = keyword.results[0].geometry.location;
         const lat = myLatLng.lat;
         const lng = myLatLng.lng;
-        const data = keyword.results;
+        const data = keyword.results[0];
+
+        const storeName = data.name;
+        const address = data.formatted_address;
+        let photo = '';
+        let hours = false;
+        if (data.opening_hours.open_now) {
+          hours = true;
+        }
+        if (data.photos && data.photos.length > 0) {
+          photo = data.photos[0].photo_reference;
+        }
+
+        results.push({
+          storeName, address, hours, photo
+        });
         this.setState({
+          searchResults: results,
           places: data,
           center: {
             lat: lat,
@@ -131,6 +157,7 @@ export default class MyMap extends React.Component {
           zoom={this.state.zoom}
           yesIWantToUseGoogleMapApiInternals={true}
           onGoogleApiLoaded={({ map, maps }) => this.apiLoaded(map, maps)}
+          // onChildClick={key => console.log(key, 'clicked')}
           >
 
               {places.map(place => (
@@ -140,14 +167,15 @@ export default class MyMap extends React.Component {
                   lng={place.geometry.location.lng}
                 />
               ))}
+
+            {places.map(result => (
+            <InfoWindow
+              key={result.name}
+              place={result}
+            />
+            ))}
           </GoogleMapReact>
 
-        {places.map(place => (
-        <InfoWindow
-          info={place}
-          key={place.place_id}
-        />
-        ))}
         <div className="panel">
           <div className="panel-header">
             <div className="travel-date">12/10/2021
