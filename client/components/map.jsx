@@ -17,6 +17,7 @@ export default class MyMap extends React.Component {
       markers: [],
       searchResults: [],
       id: null,
+      showInfo: false,
       center: {
         lat: 38.19773060427947,
         lng: 137.638514642288
@@ -28,7 +29,7 @@ export default class MyMap extends React.Component {
     this.apiLoaded = this.apiLoaded.bind(this);
     this.categorySearch = this.categorySearch.bind(this);
     this.keywordSearch = this.keywordSearch.bind(this);
-    // this.handleClick = this.handleClick.bind(this);
+    // this.handleInfowindow = this.handleInfowindow.bind(this);
 
   }
 
@@ -108,6 +109,7 @@ export default class MyMap extends React.Component {
         const data = keyword.results;
         const info = keyword.results[0];
 
+        const storeId = info.place_id;
         const storeName = info.name;
         const address = info.formatted_address;
         const hours = info.opening_hours.open_now;
@@ -121,7 +123,7 @@ export default class MyMap extends React.Component {
         }
 
         results.push({
-          storeName, address, hours, photo
+          storeId, storeName, address, hours, photo
         });
         this.setState({
           searchResults: results,
@@ -137,6 +139,21 @@ export default class MyMap extends React.Component {
         console.error('Error:', error);
       });
   }
+
+  // handleInfowindow(id) {
+  //   if (this.state.id === id) {
+  //     this.setState({
+  //       id: null,
+  //       showInfo: true
+  //     });
+  //   } else {
+  //     this.setState({
+  //       id: id,
+  //       showInfo: false
+  //     });
+  //   }
+
+  // }
 
   render() {
 
@@ -154,8 +171,8 @@ export default class MyMap extends React.Component {
           zoom={this.state.zoom}
           yesIWantToUseGoogleMapApiInternals={true}
           onGoogleApiLoaded={({ map, maps }) => this.apiLoaded(map, maps)}
-          // onChildClick={key => console.log(key, 'clicked')}>
->
+          onChildClick={this.handleInfowindow}>
+
               {places.map(place => (
               <Marker
                   key={place.place_id}
@@ -168,7 +185,8 @@ export default class MyMap extends React.Component {
 
         {searchResults.map(result => (
           <InfoWindow
-            key={result.storeName}
+            showInfo={this.state.showInfo}
+            key={result.storeId}
             result={result}
           />
         ))}
