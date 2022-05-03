@@ -39,11 +39,12 @@ export default class InfoWindow extends React.Component {
   render() {
 
     const { result } = this.props;
-
+    // className = { this.state.showInfo === true ? 'shadow' : '' }
     return (
       <div>
+        <div className='shadow'></div>
         <div key={result.storeName} className={this.props.showInfo === false ? '' : 'infowindow'}>
-          <div className='destination-name'><h3>{result.storeName}</h3></div>
+          <div className='destination-name'><h3>{result.storeName}</h3><div onClick={this.props.handleInfowindowClosed}>X</div></div>
           <div className='img-container'><img src={`https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photo_reference=${result.photo}=&key=${process.env.GOOGLE_TOKEN}`} /></div>
           <div className='destination-hours'>{result.hours === true ? 'Open' : 'Closed' }</div>
           <div className='destination-address'>Address: {result.address}</div>

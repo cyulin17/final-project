@@ -18,6 +18,7 @@ export default class MyMap extends React.Component {
       searchResults: [],
       id: null,
       showInfo: false,
+      isClosed: false,
       center: {
         lat: 38.19773060427947,
         lng: 137.638514642288
@@ -29,7 +30,9 @@ export default class MyMap extends React.Component {
     this.apiLoaded = this.apiLoaded.bind(this);
     this.categorySearch = this.categorySearch.bind(this);
     this.keywordSearch = this.keywordSearch.bind(this);
-    // this.handleInfowindow = this.handleInfowindow.bind(this);
+    this.handleInfowindow = this.handleInfowindow.bind(this);
+    this.handleInfowindowClosed = this.handleInfowindowClosed.bind(this);
+    // this.handleClick = this.handleClick.bind(this);
 
   }
 
@@ -140,20 +143,15 @@ export default class MyMap extends React.Component {
       });
   }
 
-  // handleInfowindow(id) {
-  //   if (this.state.id === id) {
-  //     this.setState({
-  //       id: null,
-  //       showInfo: true
-  //     });
-  //   } else {
-  //     this.setState({
-  //       id: id,
-  //       showInfo: false
-  //     });
-  //   }
+  handleInfowindow(key) {
+    this.setState({
+      showInfo: true
+    });
+  }
 
-  // }
+  handleInfowindowClosed() {
+    this.setState({ showInfo: false });
+  }
 
   render() {
 
@@ -171,10 +169,12 @@ export default class MyMap extends React.Component {
           zoom={this.state.zoom}
           yesIWantToUseGoogleMapApiInternals={true}
           onGoogleApiLoaded={({ map, maps }) => this.apiLoaded(map, maps)}
-          onChildClick={this.handleInfowindow}>
+          onChildClick={this.handleInfowindow}
+         >
 
               {places.map(place => (
               <Marker
+                  onClick={this.handleInfowindow}
                   key={place.place_id}
                   lat={place.geometry.location.lat}
                   lng={place.geometry.location.lng}
@@ -188,6 +188,7 @@ export default class MyMap extends React.Component {
             showInfo={this.state.showInfo}
             key={result.storeId}
             result={result}
+            handleInfowindowClosed={this.handleInfowindowClosed}
           />
         ))}
 
