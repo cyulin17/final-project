@@ -32,7 +32,6 @@ export default class MyMap extends React.Component {
     this.keywordSearch = this.keywordSearch.bind(this);
     this.handleInfowindow = this.handleInfowindow.bind(this);
     this.handleInfowindowClosed = this.handleInfowindowClosed.bind(this);
-    // this.handleClick = this.handleClick.bind(this);
 
   }
 
@@ -83,6 +82,7 @@ export default class MyMap extends React.Component {
         const data = category.results;
         const lat = myLatLng.lat;
         const lng = myLatLng.lng;
+
         this.setState({
           places: data,
           center: {
@@ -105,31 +105,30 @@ export default class MyMap extends React.Component {
       .then(res => res.json())
       .then(keyword => {
 
-        const results = [];
+        // const results = [];
         const myLatLng = keyword.results[0].geometry.location;
         const lat = myLatLng.lat;
         const lng = myLatLng.lng;
         const data = keyword.results;
-        const info = keyword.results[0];
+        // const info = keyword.results[0];
 
-        const storeId = info.place_id;
-        const storeName = info.name;
-        const address = info.formatted_address;
-        const hours = info.opening_hours.open_now;
-        let photo = '';
-        // let hours = false;
-        // if (info.opening_hours.open_now) {
-        //   hours = true;
+        // const storeId = info.place_id;
+        // const storeName = info.name;
+        // const address = info.formatted_address;
+        // const hours = info.opening_hours.open_now;
+        // let photo = '';
+        // // let hours = false;
+        // // if (info.opening_hours.open_now) {
+        // //   hours = true;
+        // // }
+        // if (info.photos && info.photos.length > 0) {
+        //   photo = info.photos[0].photo_reference;
         // }
-        if (info.photos && info.photos.length > 0) {
-          photo = info.photos[0].photo_reference;
-        }
 
-        results.push({
-          storeId, storeName, address, hours, photo
-        });
+        // results.push({
+        //   storeId, storeName, address, hours, photo
+        // });
         this.setState({
-          searchResults: results,
           places: data,
           center: {
             lat: lat,
@@ -144,9 +143,45 @@ export default class MyMap extends React.Component {
   }
 
   handleInfowindow(key) {
-    this.setState({
-      showInfo: true
-    });
+    if (key) {
+      const results = [];
+      const info = encodeURIComponent(`https://maps.googleapis.com/maps/api/place/details/json?place_id=${key}&key=${process.env.GOOGLE_TOKEN}`);
+      fetch('https://lfz-cors.herokuapp.com/?url=' + info, { method: 'GET' })
+        .then(res => res.json())
+        .then(info => {
+          const storeInfo = info.result;
+          // console.log(storeInfo);
+          const storeId = storeInfo.place_id;
+          const storeName = storeInfo.name;
+          const address = storeInfo.formatted_address;
+          // const hours = storeInfo.opening_hours.open_now;
+          const storeHours = storeInfo.opening_hours.weekday_text;
+          const phone = storeInfo.formatted_phone_number;
+          let photo = '';
+          let website = '';
+          if (storeInfo.website) {
+            website = storeInfo.website;
+          }
+          if (storeInfo.photos && storeInfo.photos.length > 0) {
+            photo = storeInfo.photos[0].photo_reference;
+          }
+          results.push({
+            storeId,
+            storeName,
+            address,
+            // hours,
+            storeHours,
+            phone,
+            website,
+            photo
+          });
+          this.setState({
+            showInfo: true,
+            searchResults: results
+          });
+        });
+    }
+
   }
 
   handleInfowindowClosed() {
