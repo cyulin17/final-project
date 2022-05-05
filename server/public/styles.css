@@ -314,14 +314,23 @@ input[type="search"] {
 }
 
 .infowindow {
-  position: fixed;
+  position: absolute;
   top: 63.5px;
   right: 0;
   width: 550px;
   height: 100%;
   background-color: #fff;
+}
 
-  /* transition: ease-in 0.5s; */
+.shadow {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background-color: pink;
+}
+
+.close {
+  cursor: pointer;
 }
 
 .destination-address {
@@ -330,24 +339,38 @@ input[type="search"] {
 }
 
 .destination-name {
+  display: flex;
+  justify-content: space-between;
   margin: 30px;
 }
 
 .destination-hours {
-  margin-top: 100px;
+  margin-top: 50px;
+  margin-left: 30px;
+}
+
+.hours-container {
+  margin-left: 18px;
+}
+
+.destination-phone {
+  margin-left: 30px;
+}
+
+.destination-website {
+  margin-top: 10px;
   margin-left: 30px;
 }
 
 .img-container {
   width: 550px;
-  height: 300px;
+  height: 350px;
 }
 
 .img-container img {
-  display: block;
-  margin-left: auto;
-  margin-right: auto;
-  width: 50%;
+  width: 550px;
+  height: 350px;
+  object-fit: cover;
 }
 
 .add {
@@ -366,30 +389,6 @@ input[type="search"] {
   margin-top: 30px;
   margin-left: 300px;
   text-align: center;
-}
-
-/* .drawer {
-  position: fixed;
-  width: 380px;
-  height: 100%;
-  background-color: #fff;
-  transition: ease-in 0.5s;
-} */
-.infowindow.opened {
-  transform: translate(0);
-}
-
-.infowindow.closed {
-  transform: translate(-380px);
-}
-
-.shadow {
-  position: absolute;
-  width: 100%;
-  height: 100%;
-  background-color: pink;
-
-  /* background-color: rgb(0 0 0 / 30%); */
 }
 
 input[name="add-time"] {

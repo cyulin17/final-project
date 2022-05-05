@@ -1,7 +1,6 @@
 import React from 'react';
 import GoogleMapReact from 'google-map-react';
 import Search from './search';
-// import Marker from './marker';
 import InfoWindow from './infowindow';
 
 function Marker() {
@@ -12,18 +11,14 @@ export default class MyMap extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      mapLoaded: false,
       places: [],
-      markers: [],
-      searchResults: [],
-      id: null,
+      info: [],
       showInfo: false,
       isClosed: false,
       center: {
         lat: 38.19773060427947,
         lng: 137.638514642288
       },
-      placesService: {},
       zoom: 5
     };
     this.areaSearch = this.areaSearch.bind(this);
@@ -37,10 +32,8 @@ export default class MyMap extends React.Component {
 
   apiLoaded(map, maps) {
     this.setState({
-      mapsLoaded: true,
       map,
-      maps,
-      placesService: new maps.places.PlacesService(map)
+      maps
     });
   }
 
@@ -105,29 +98,10 @@ export default class MyMap extends React.Component {
       .then(res => res.json())
       .then(keyword => {
 
-        // const results = [];
         const myLatLng = keyword.results[0].geometry.location;
         const lat = myLatLng.lat;
         const lng = myLatLng.lng;
         const data = keyword.results;
-        // const info = keyword.results[0];
-
-        // const storeId = info.place_id;
-        // const storeName = info.name;
-        // const address = info.formatted_address;
-        // const hours = info.opening_hours.open_now;
-        // let photo = '';
-        // // let hours = false;
-        // // if (info.opening_hours.open_now) {
-        // //   hours = true;
-        // // }
-        // if (info.photos && info.photos.length > 0) {
-        //   photo = info.photos[0].photo_reference;
-        // }
-
-        // results.push({
-        //   storeId, storeName, address, hours, photo
-        // });
         this.setState({
           places: data,
           center: {
@@ -145,20 +119,25 @@ export default class MyMap extends React.Component {
   handleInfowindow(key) {
     if (key) {
       const results = [];
+
       const info = encodeURIComponent(`https://maps.googleapis.com/maps/api/place/details/json?place_id=${key}&key=${process.env.GOOGLE_TOKEN}`);
+
       fetch('https://lfz-cors.herokuapp.com/?url=' + info, { method: 'GET' })
         .then(res => res.json())
         .then(info => {
           const storeInfo = info.result;
-          // console.log(storeInfo);
           const storeId = storeInfo.place_id;
           const storeName = storeInfo.name;
           const address = storeInfo.formatted_address;
-          // const hours = storeInfo.opening_hours.open_now;
-          const storeHours = storeInfo.opening_hours.weekday_text;
           const phone = storeInfo.formatted_phone_number;
+          let hours = '';
+          let storeHours = '';
           let photo = '';
           let website = '';
+          if (storeInfo.opening_hours) {
+            hours = storeInfo.opening_hours.open_now;
+            storeHours = storeInfo.opening_hours.weekday_text;
+          }
           if (storeInfo.website) {
             website = storeInfo.website;
           }
@@ -169,7 +148,7 @@ export default class MyMap extends React.Component {
             storeId,
             storeName,
             address,
-            // hours,
+            hours,
             storeHours,
             phone,
             website,
@@ -177,7 +156,7 @@ export default class MyMap extends React.Component {
           });
           this.setState({
             showInfo: true,
-            searchResults: results
+            info: results
           });
         });
     }
@@ -190,7 +169,7 @@ export default class MyMap extends React.Component {
 
   render() {
 
-    const { places, searchResults } = this.state;
+    const { places, info } = this.state;
 
     return (
       <div style={ { height: '100vh' }}>
@@ -209,7 +188,6 @@ export default class MyMap extends React.Component {
 
               {places.map(place => (
               <Marker
-                  onClick={this.handleInfowindow}
                   key={place.place_id}
                   lat={place.geometry.location.lat}
                   lng={place.geometry.location.lng}
@@ -218,7 +196,7 @@ export default class MyMap extends React.Component {
 
           </GoogleMapReact>
 
-        {searchResults.map(result => (
+        {info.map(result => (
           <InfoWindow
             showInfo={this.state.showInfo}
             key={result.storeId}
