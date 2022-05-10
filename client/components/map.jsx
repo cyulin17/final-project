@@ -213,6 +213,23 @@ export default class MyMap extends React.Component {
                   <span className="next"><i className="fas fa-caret-right right-arrow"></i></span>
             </div>
           </div>
+            <ul className="ul-padding">
+              <li className="schedule-box">
+                <div className="schedule-container">
+                  <div className="time-container">
+                    <div>9:00</div>
+                    <div className="duration"></div>
+                    <div>10:00</div>
+                  </div>
+                  <div className="photo-container">
+                    <img src="" alt="" />
+                  </div>
+                  <div className="place-container">
+                    Tokyo Sky tree
+                  </div>
+                </div>
+              </li>
+            </ul>
         </div>
     </div>
       </div>
