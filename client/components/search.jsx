@@ -70,7 +70,6 @@ export default class Search extends React.Component {
   }
 
   handleInputChange(event) {
-
     const value = event.target.value;
     const name = event.target.name;
     this.setState({
