@@ -2,6 +2,7 @@ import React from 'react';
 import GoogleMapReact from 'google-map-react';
 import Search from './search';
 import InfoWindow from './infowindow';
+import PlanPanel from './plan-panel';
 
 function Marker() {
   return <div className="map-marker" />;
@@ -15,6 +16,7 @@ export default class MyMap extends React.Component {
       info: [],
       showInfo: false,
       isClosed: false,
+      itinerary: [],
       center: {
         lat: 38.19773060427947,
         lng: 137.638514642288
@@ -27,6 +29,7 @@ export default class MyMap extends React.Component {
     this.keywordSearch = this.keywordSearch.bind(this);
     this.handleInfowindow = this.handleInfowindow.bind(this);
     this.handleInfowindowClosed = this.handleInfowindowClosed.bind(this);
+    this.addItinerary = this.addItinerary.bind(this);
 
   }
 
@@ -167,6 +170,13 @@ export default class MyMap extends React.Component {
     this.setState({ showInfo: false });
   }
 
+  addItinerary(scheduleArray) {
+
+    this.setState({
+      itinerary: this.state.itinerary.concat(scheduleArray)
+    });
+  }
+
   render() {
 
     const { places, info } = this.state;
@@ -202,37 +212,13 @@ export default class MyMap extends React.Component {
             key={result.storeId}
             result={result}
             handleInfowindowClosed={this.handleInfowindowClosed}
+            onAddItinerary={this.addItinerary}
           />
         ))}
+        <PlanPanel schedule={this.state.itinerary} />
 
-        <div className="panel">
-          <div className="panel-header">
-            <div className="travel-date">12/10/2021
-              <div className="arrow-container">
-                <span className="previous"><i className="fas fa-caret-left left-arrow"></i></span>
-                  <span className="next"><i className="fas fa-caret-right right-arrow"></i></span>
-            </div>
-          </div>
-            <ul className="ul-padding">
-              <li className="schedule-box">
-                <div className="schedule-container">
-                  <div className="time-container">
-                    <div>9:00</div>
-                    <div className="duration"></div>
-                    <div>10:00</div>
-                  </div>
-                  <div className="photo-container">
-                    <img src="" alt="" />
-                  </div>
-                  <div className="place-container">
-                    Tokyo Sky tree
-                  </div>
-                </div>
-              </li>
-            </ul>
-        </div>
-    </div>
       </div>
+
     );
   }
 }
