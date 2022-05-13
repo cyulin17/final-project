@@ -10,7 +10,25 @@ export default class PlanPanel extends React.Component {
 
   render() {
 
-    // const { schedule } = this.props;
+    const { schedule } = this.props;
+
+    const schedules = schedule.map(schedule =>
+      <li key={schedule.destination} className="schedule-box">
+        <div className="schedule-container">
+          <div className="time-container">
+            {schedule.tripStartTime}
+            <div className="duration"></div>
+            <div>10:00</div>
+          </div>
+          <div className="photo-container">
+            <img src={`https://maps.googleapis.com/maps/api/place/photo?maxwidth=500&photo_reference=${schedule.photo}&key=${process.env.GOOGLE_TOKEN}`} />
+          </div>
+          <div className="place-container">
+            {schedule.destination}
+          </div>
+        </div>
+      </li>
+    );
 
     return (
     <div className="panel">
@@ -22,21 +40,7 @@ export default class PlanPanel extends React.Component {
           </div>
         </div>
         <ul className="ul-padding">
-          <li className="schedule-box">
-            <div className="schedule-container">
-              <div className="time-container">
-                <div>9:00</div>
-                <div className="duration"></div>
-                <div>10:00</div>
-              </div>
-              <div className="photo-container">
-                {/* <img src={`https://maps.googleapis.com/maps/api/place/photo?maxwidth=500&photo_reference=${schedule.photo}&key=${process.env.GOOGLE_TOKEN}`} /> */}
-              </div>
-              <div className="place-container">
-                Tokyo SkyTree
-              </div>
-            </div>
-          </li>
+          {schedules}
         </ul>
       </div>
     </div>

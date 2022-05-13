@@ -40,11 +40,11 @@ export default class InfoWindow extends React.Component {
     const destination = this.props.result.storeName;
     const photo = this.props.result.photo;
     const tripDate = this.state.addDate;
-    const tripTime = this.state.addTime;
+    const tripStartTime = this.state.addTime;
 
     addInfo.push({
       tripDate,
-      tripTime,
+      tripStartTime,
       destination,
       photo
     });
