@@ -175,7 +175,7 @@ export default class Search extends React.Component {
                 placeholder="Tokyo Tower"
                 onChange={this.handleInputChange}
                 value={this.state.keyword}/>
-                <span className="search-icon"><button type="submit"><i className="fas fa-search icon-size"></i></button></span>
+                <span className="search-icon"><button className="search" type="submit"><i className="fas fa-search icon-size"></i></button></span>
             </div>
         </div>
           </form>

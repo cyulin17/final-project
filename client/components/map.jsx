@@ -173,7 +173,16 @@ export default class MyMap extends React.Component {
   addItinerary(scheduleArray) {
 
     this.setState({
-      itinerary: this.state.itinerary.concat(scheduleArray)
+      itinerary: this.state.itinerary.concat(scheduleArray).sort((a, b) => {
+        if (a.tripStartTime < b.tripStartTime) {
+          return -1;
+        }
+        if (a.tripStartTime > b.tripStartTime) {
+          return 1;
+        }
+        return 0;
+      }
+      )
     });
   }
 

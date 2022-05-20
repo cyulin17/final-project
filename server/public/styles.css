@@ -440,3 +440,14 @@ input[name="addTime"] {
 .ul-padding {
   padding: 0;
 }
+
+.search {
+  background: none;
+  border: none;
+}
+
+.add-itinerary {
+  margin-top: 15px;
+  background: none;
+  border: 1px solid #ccc;
+}

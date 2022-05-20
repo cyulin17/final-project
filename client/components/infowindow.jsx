@@ -41,10 +41,12 @@ export default class InfoWindow extends React.Component {
     const photo = this.props.result.photo;
     const tripDate = this.state.addDate;
     const tripStartTime = this.state.addTime;
+    const tripEndTime = addOneHour(tripStartTime, 1);
 
     addInfo.push({
       tripDate,
       tripStartTime,
+      tripEndTime,
       destination,
       photo
     });
@@ -95,7 +97,7 @@ export default class InfoWindow extends React.Component {
                 <label htmlFor="add-time"></label>
                 <input type="time" name="addTime" id="addTime" value={this.state.addTime} onChange={this.handleInputChange}/>
             </div>
-            <button type="submit">Add</button>
+            <button className="add-itinerary" type="submit">Add</button>
           </div>
         </div>
         </form>
@@ -103,4 +105,22 @@ export default class InfoWindow extends React.Component {
     );
   }
 
+}
+
+function addOneHour(startTime, hour) {
+  const array = startTime.split(':');
+  let hours = parseInt(array[0]);
+  let minutes = parseInt(array[1]);
+
+  hours = hours + hour;
+
+  if (hours > 23) {
+    hours = hours - 24;
+  }
+
+  if (minutes === 0) {
+    minutes = minutes + '0';
+  }
+
+  return `${hours < 10 ? '0' + hours : hours}:${minutes}`;
 }

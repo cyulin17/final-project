@@ -18,7 +18,7 @@ export default class PlanPanel extends React.Component {
           <div className="time-container">
             {schedule.tripStartTime}
             <div className="duration"></div>
-            <div>10:00</div>
+            {schedule.tripEndTime}
           </div>
           <div className="photo-container">
             <img src={`https://maps.googleapis.com/maps/api/place/photo?maxwidth=500&photo_reference=${schedule.photo}&key=${process.env.GOOGLE_TOKEN}`} />
