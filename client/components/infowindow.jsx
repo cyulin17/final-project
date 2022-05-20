@@ -7,7 +7,9 @@ export default class InfoWindow extends React.Component {
     this.state = {
       isClicked: false,
       button: false,
-      date: ''
+      schedule: [],
+      addDate: '',
+      addTime: ''
     };
 
     this.handleClick = this.handleClick.bind(this);
@@ -23,7 +25,6 @@ export default class InfoWindow extends React.Component {
   }
 
   handleInputChange(event) {
-
     const value = event.target.value;
     const name = event.target.name;
     this.setState({
@@ -34,6 +35,28 @@ export default class InfoWindow extends React.Component {
 
   handleSubmit(event) {
     event.preventDefault();
+
+    const addInfo = [];
+    const destination = this.props.result.storeName;
+    const photo = this.props.result.photo;
+    const tripDate = this.state.addDate;
+    const tripStartTime = this.state.addTime;
+    const tripEndTime = addOneHour(tripStartTime, 1);
+
+    addInfo.push({
+      tripDate,
+      tripStartTime,
+      tripEndTime,
+      destination,
+      photo
+    });
+
+    this.setState({
+      schedule: addInfo
+    });
+
+    this.props.onAddItinerary(addInfo);
+
   }
 
   render() {
@@ -42,6 +65,7 @@ export default class InfoWindow extends React.Component {
 
     return (
       <div>
+        <form onSubmit={this.handleSubmit} action="">
         <div key={result.storeName} className={this.props.showInfo === false ? 'hidden' : 'infowindow'}>
             <div className='destination-name'>
               <div><h3>{result.storeName}</h3></div>
@@ -63,23 +87,40 @@ export default class InfoWindow extends React.Component {
             <div className='destination-phone'><i className="fas fa-phone"></i> {result.phone}</div>
             <div className='destination-address'><i className="fas fa-map-marker-alt"></i> {result.address}</div>
             <div className='destination-website'><i className="fas fa-link"></i> {result.website}</div>
-          <form onSubmit={this.handleSubmit} action="">
           <div onClick={this.handleClick} className='add'>Add to Itenerary</div>
           <div className={this.state.isClicked === true ? 'date-time' : 'hidden'}>
             <div>
                 <label htmlFor="add-date"></label>
-                <input type="date" name="add-date" id="add-date" value={this.state.addDate} onChange={this.handleInputChange}/>
+                <input type="date" name="addDate" id="addDate" value={this.state.addDate} onChange={this.handleInputChange}/>
             </div>
             <div>
                 <label htmlFor="add-time"></label>
-                <input type="time" name="add-time" id="add-time" value={this.state.addTime} onChange={this.handleInputChange}/>
+                <input type="time" name="addTime" id="addTime" value={this.state.addTime} onChange={this.handleInputChange}/>
             </div>
-            <button>Add</button>
+            <button className="add-itinerary" type="submit">Add</button>
           </div>
-          </form>
         </div>
+        </form>
       </div>
     );
   }
 
+}
+
+function addOneHour(startTime, hour) {
+  const array = startTime.split(':');
+  let hours = parseInt(array[0]);
+  let minutes = parseInt(array[1]);
+
+  hours = hours + hour;
+
+  if (hours > 23) {
+    hours = hours - 24;
+  }
+
+  if (minutes === 0) {
+    minutes = minutes + '0';
+  }
+
+  return `${hours < 10 ? '0' + hours : hours}:${minutes}`;
 }

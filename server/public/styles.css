@@ -391,6 +391,63 @@ input[type="search"] {
   text-align: center;
 }
 
-input[name="add-time"] {
+input[name="addTime"] {
   width: 134px;
+}
+
+.schedule-container {
+  display: flex;
+  margin-bottom: 5px;
+  margin-top: 5px;
+}
+
+.photo-container {
+  width: 50px;
+  height: 50px;
+  margin-top: 15px;
+  margin-left: 50px;
+}
+
+.photo-container img {
+  width: 50px;
+  height: 50px;
+  object-fit: contain;
+}
+
+.place-container {
+  margin-top: 30px;
+  margin-left: 50px;
+}
+
+.time-container {
+  margin-left: 30px;
+}
+
+.duration {
+  width: 15px;
+  height: 35px;
+  border-right: 1px solid #ccc;
+}
+
+.schedule-box {
+  border-bottom: 1px solid #ccc;
+}
+
+/* .schedule-box:last-child {
+  border-bottom: none;
+} */
+
+.ul-padding {
+  padding: 0;
+}
+
+.search {
+  background: none;
+  border: none;
+}
+
+.add-itinerary {
+  margin-top: 15px;
+  background: none;
+  border: 1px solid #ccc;
 }
