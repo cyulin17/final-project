@@ -122,5 +122,9 @@ function addOneHour(startTime, hour) {
     minutes = minutes + '0';
   }
 
+  if (minutes < 10) {
+    minutes = '0' + minutes;
+  }
+
   return `${hours < 10 ? '0' + hours : hours}:${minutes}`;
 }
