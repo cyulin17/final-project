@@ -30,6 +30,7 @@ export default class MyMap extends React.Component {
     this.handleInfowindow = this.handleInfowindow.bind(this);
     this.handleInfowindowClosed = this.handleInfowindowClosed.bind(this);
     this.addItinerary = this.addItinerary.bind(this);
+    this.handleDelete = this.handleDelete.bind(this);
 
   }
 
@@ -186,6 +187,17 @@ export default class MyMap extends React.Component {
     });
   }
 
+  handleDelete(schedule) {
+
+    const newItineraryArray = [...this.state.itinerary];
+    const deleteItemIndex = newItineraryArray.findIndex(scheduleObject => scheduleObject === schedule);
+    newItineraryArray.splice(deleteItemIndex, 1);
+    this.setState({
+      itinerary: newItineraryArray
+    });
+
+  }
+
   render() {
 
     const { places, info } = this.state;
@@ -224,7 +236,7 @@ export default class MyMap extends React.Component {
             onAddItinerary={this.addItinerary}
           />
         ))}
-        <PlanPanel schedule={this.state.itinerary} />
+        <PlanPanel schedule={this.state.itinerary} onHandleDelete={this.handleDelete}/>
 
       </div>
 

@@ -4,7 +4,6 @@ export default class PlanPanel extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-
     };
   }
 
@@ -26,6 +25,9 @@ export default class PlanPanel extends React.Component {
           <div className="place-container">
             {schedule.destination}
           </div>
+          <div className="trash-container">
+            <i onClick={() => this.props.onHandleDelete(schedule)} className="fas fa-trash-alt"></i>
+          </div>
         </div>
       </li>
     );
@@ -39,12 +41,11 @@ export default class PlanPanel extends React.Component {
             <span className="next"><i className="fas fa-caret-right right-arrow"></i></span>
           </div>
         </div>
+        </div>
         <ul className="ul-padding">
           {schedules}
         </ul>
-      </div>
     </div>
     );
-
   }
 }
