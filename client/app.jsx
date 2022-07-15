@@ -1,7 +1,7 @@
 import React from 'react';
 import Home from './pages/home';
 import Login from './pages/login';
-import Plan from './pages/plan';
+import MyMap from '../client/components/my-map';
 import parseRoute from './lib/parse.route';
 
 export default class App extends React.Component {
@@ -35,9 +35,12 @@ export default class App extends React.Component {
     if (route.path === 'login') {
       return <Login signIn={this.signIn}/>;
     }
-    if (route.path === 'plan') {
-      return <Plan />;
+    if (route.path === 'map') {
+      const startDate = route.params.get('startDate');
+      const nextDate = route.params.get('nextDate');
+      return <MyMap startDate={startDate} nextDate={nextDate}/>;
     }
+
   }
 
   render() {

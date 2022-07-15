@@ -32,11 +32,11 @@ app.post('/api/users/sign-up', (req, res, next) => {
     .hash(password)
     .then(hashedPassword => {
       const sql = `
-        insert into "users" ("firstName", "lastName", "email", "password")
+        insert into "users" ("firstName", "lastName", "email", "hashedPassword")
         values ($1, $2, $3, $4)
         returning *
       `;
-      const params = [firstname, lastname, email, password];
+      const params = [firstname, lastname, email, hashedPassword];
       return db.query(sql, params);
     })
     .then(result => {
@@ -53,8 +53,7 @@ app.post('/api/users/sign-in', (req, res, next) => {
   }
   const sql = `
     select "userId",
-           "email",
-           "password"
+           "hashedPassword"
       from "users"
      where "email" = $1
   `;
@@ -65,18 +64,15 @@ app.post('/api/users/sign-in', (req, res, next) => {
       if (!user) {
         throw new ClientError(401, 'invalid login');
       }
-
-      argon2.verify(user.password, password)
+      const { userId, hashedPassword } = user;
+      argon2.verify(hashedPassword, password)
         .then(isMatching => {
           if (!isMatching) {
             throw new ClientError(401, 'invalid login');
           }
-          const payload = {
-            userId: user.userId,
-            email: email
-          };
+          const payload = { userId, email };
           const token = jwt.sign(payload, process.env.TOKEN_SECRET);
-          res.json({ token, payload });
+          res.json({ token, user: payload });
 
         })
         .catch(err => next(err));

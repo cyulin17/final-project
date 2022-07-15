@@ -128,7 +128,7 @@ export default class Search extends React.Component {
     );
     return (
       <nav className="navbar navbar-light">
-        <div className="container-fluid justify-content-start">
+        <div className="container-fluid justify-content-center justify-content-md-start">
           <a className="navbar-brand logo" href="#">
             GotoJapan
           </a>
@@ -150,14 +150,14 @@ export default class Search extends React.Component {
               </ul>
             </div>
             <div>
-              <label htmlFor="catogory"></label>
+              <label htmlFor="category"></label>
                 <input
                 onFocus={this.onFocus}
-                className="catogory"
+                className="category"
                 type="search"
                 name="setCategory"
                 id="category"
-                placeholder="Catogory"
+                placeholder="Category"
                 onChange={this.handleInputChange}
                 value={this.state.setCategory}/>
                 <ul className={this.state.onFocus === 'category' ? 'category-menu' : 'hidden'}>

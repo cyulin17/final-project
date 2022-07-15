@@ -14,30 +14,39 @@ export default class Plan extends React.Component {
   }
 
   handleChange(event) {
+
+    const value = event.target.value;
+    const name = event.target.name;
     this.setState({
-      startDate: event.target.startDate,
-      nextDate: event.target.nextDate
+      [name]: value
     });
   }
 
   handleSubmit(event) {
     event.preventDefault();
+
+    const { startDate, nextDate } = this.state;
+    const searchParams = new URLSearchParams({ startDate, nextDate });
+    const newHash = `#map?${searchParams}`;
+    window.location.hash = newHash;
+
   }
 
   render() {
+
     return (
       <form onSubmit={this.handleSubmit}>
         <div className="plan-container">
         <div className="calendar-container">
-            <label htmlFor="from">Travel Date From</label>
-            <input className="calender" type="date" name="from" id="from" value={this.state.startDate} onChange={this.handleChange}/>
+            <label htmlFor="startDate">Travel Date From</label>
+            <input className="calender" type="date" name="startDate" id="startDate" value={this.state.startDate} onChange={this.handleChange}/>
         </div>
         <div>
-            <label htmlFor="to">To</label>
-            <input className="calender" type="date" name="to" id="to" value={this.state.nextDate} onChange={this.handleChange} />
+            <label htmlFor="nextDate">To</label>
+            <input className="calender" type="date" name="nextDate" id="nextDate" value={this.state.nextDate} onChange={this.handleChange} />
         </div>
         <div>
-          <button className="plan-button"><a href='#plan'>PLAN</a></button>
+            <button onClick={this.handleSubmit} className="plan-button" type="submit"><a href='#map'>PLAN</a></button>
           </div>
         </div>
       </form>

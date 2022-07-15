@@ -1,0 +1,89 @@
+@media screen and (max-width: 768px) {
+  .image-box {
+    display: none;
+  }
+
+  .image {
+    flex-basis: 100%;
+  }
+
+  .plan-container {
+    position: static;
+    display: inline;
+  }
+
+  .calender {
+    height: 35px;
+    width: 150px;
+    font-size: 1rem;
+    margin-bottom: 10px;
+  }
+
+  .plan-button {
+    width: 100px;
+    height: 35px;
+    font-size: 20px;
+    margin-top: 6px;
+  }
+
+  input[name="startDate"] {
+    border: 1px solid #ccc;
+  }
+
+  input[name="nextDate"] {
+    border: 1px solid #ccc;
+  }
+
+  .button-container {
+    padding: 0;
+  }
+
+  .panel {
+    position: static;
+    width: 100%;
+  }
+
+  .search-container {
+    display: block;
+    margin: 0 auto;
+  }
+
+  input[type="search"] {
+    width: 350px;
+    height: 30px;
+    border: 1px solid #b0b0b0;
+    border-radius: 10px;
+    margin-top: 1px;
+    margin-bottom: 1px;
+    text-align: center;
+  }
+
+  .area-menu,
+  .category-menu {
+    border-radius: 10px;
+    width: 350px;
+  }
+
+  .search-icon {
+    display: block;
+    border: 1px solid #b0b0b0;
+    border-radius: 10px;
+    margin: 2px auto;
+    padding: 0;
+    text-align: center;
+  }
+
+  .infowindow {
+    width: 100vw;
+    height: auto;
+    top: 0;
+  }
+
+  .img-container {
+    width: 100vw;
+  }
+
+  .add {
+    margin-left: 25%;
+  }
+}

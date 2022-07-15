@@ -1,6 +1,6 @@
 import React from 'react';
 import GoogleMapReact from 'google-map-react';
-import Search from './search';
+import Search from './search-bar';
 import InfoWindow from './infowindow';
 import PlanPanel from './plan-panel';
 
@@ -201,10 +201,21 @@ export default class MyMap extends React.Component {
   render() {
 
     const { places, info } = this.state;
+    const { startDate, nextDate } = this.props;
 
     return (
-      <div style={ { height: '100vh' }}>
+      <div>
         <Search onAreaSearch={this.areaSearch} onCategorySearch={this.categorySearch} onKeywordSearch={this.keywordSearch}/>
+        <div style={ { height: '100vh' }}>
+          {info.map(result => (
+            <InfoWindow
+              showInfo={this.state.showInfo}
+              key={result.storeId}
+              result={result}
+              handleInfowindowClosed={this.handleInfowindowClosed}
+              onAddItinerary={this.addItinerary}
+            />
+          ))}
         <GoogleMapReact
           bootstrapURLKeys={{
             key: process.env.GOOGLE_TOKEN,
@@ -226,18 +237,8 @@ export default class MyMap extends React.Component {
               ))}
 
           </GoogleMapReact>
-
-        {info.map(result => (
-          <InfoWindow
-            showInfo={this.state.showInfo}
-            key={result.storeId}
-            result={result}
-            handleInfowindowClosed={this.handleInfowindowClosed}
-            onAddItinerary={this.addItinerary}
-          />
-        ))}
-        <PlanPanel schedule={this.state.itinerary} onHandleDelete={this.handleDelete}/>
-
+         </div>
+        <PlanPanel startDate={startDate} nextDate={nextDate} schedule={this.state.itinerary} onHandleDelete={this.handleDelete}/>
       </div>
 
     );

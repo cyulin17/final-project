@@ -1,15 +1,9 @@
 import React from 'react';
 
 export default class PlanPanel extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-    };
-  }
 
   render() {
-
-    const { schedule } = this.props;
+    const { schedule, startDate } = this.props;
 
     const schedules = schedule.map(schedule =>
       <li key={schedule.destination} className="schedule-box">
@@ -35,7 +29,7 @@ export default class PlanPanel extends React.Component {
     return (
     <div className="panel">
       <div className="panel-header">
-        <div className="travel-date">12/10/2021
+        <div className="travel-date">{startDate}
           <div className="arrow-container">
             <span className="previous"><i className="fas fa-caret-left left-arrow"></i></span>
             <span className="next"><i className="fas fa-caret-right right-arrow"></i></span>

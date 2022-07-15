@@ -47,9 +47,8 @@ export default class Login extends React.Component {
       .then(info => {
         localStorage.setItem('token', info.token);
         this.props.signIn(info);
-        location.hash = '#';
+        location.hash = '#map';
         alert('Login successfully!');
-
       }
       )
       .catch(error => {
