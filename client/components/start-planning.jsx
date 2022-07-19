@@ -39,14 +39,14 @@ export default class Plan extends React.Component {
         <div className="plan-container">
         <div className="calendar-container">
             <label htmlFor="startDate">Travel Date From</label>
-            <input className="calender" type="date" name="startDate" id="startDate" value={this.state.startDate} onChange={this.handleChange}/>
+            <input type="date" name="startDate" id="startDate" value={this.state.startDate} onChange={this.handleChange}/>
         </div>
         <div>
             <label htmlFor="nextDate">To</label>
-            <input className="calender" type="date" name="nextDate" id="nextDate" value={this.state.nextDate} onChange={this.handleChange} />
+            <input type="date" name="nextDate" id="nextDate" value={this.state.nextDate} onChange={this.handleChange} />
         </div>
         <div>
-            <button onClick={this.handleSubmit} className="plan-button" type="submit"><a href='#map'>PLAN</a></button>
+            <button className="plan-button" type="submit">PLAN</button>
           </div>
         </div>
       </form>

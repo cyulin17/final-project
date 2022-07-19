@@ -71,41 +71,36 @@ body {
   box-shadow: 5px 5px 20px 1px #82878b;
 }
 
-.calender {
-  height: 50px;
-  width: 200px;
-  font-size: 1.3rem;
-}
-
 .plan-button {
   border: none;
   width: 120px;
   height: 50px;
   background-color: #eb034f;
   font-size: 25px;
-}
-
-.plan-button a {
   color: #fff;
-  vertical-align: text-top;
   letter-spacing: 0.2rem;
   padding-left: 5px;
 }
 
 input[name="startDate"] {
-  border: 1px solid #ccc;
-  border-right: none;
+  height: 50px;
+  width: 200px;
+  border: none;
   padding-top: 1.2rem;
   padding-left: 2.5rem;
   color: #424242;
+  font-size: 1.3rem;
 }
 
 input[name="nextDate"] {
-  border: 1px solid #ccc;
-  border-right: none;
+  height: 50px;
+  width: 200px;
+  border: none;
+  border-left: 1px solid #ccc;
   padding-top: 1.2rem;
   padding-left: 2.5rem;
   color: #424242;
+  font-size: 1.3rem;
 }
 
 input:focus {
