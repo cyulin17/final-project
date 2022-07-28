@@ -41,6 +41,29 @@ export default class MyMap extends React.Component {
     });
   }
 
+  componentDidMount() {
+    const userToken = window.localStorage.getItem('token');
+
+    fetch('/api/places',
+      {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-Access-Token': userToken
+        }
+      })
+      .then(res => res.json())
+      .then(result => {
+        this.setState({
+          itinerary: result
+        });
+      }
+      )
+      .catch(error => {
+        console.error('Error:', error);
+      });
+  }
+
   areaSearch(query) {
 
     const googleURL = encodeURIComponent(`https://maps.googleapis.com/maps/api/place/textsearch/json?query=${query}&key=${process.env.GOOGLE_TOKEN}`);

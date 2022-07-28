@@ -3,6 +3,8 @@ import Home from './pages/home';
 import Login from './pages/login';
 import MyMap from '../client/components/my-map';
 import parseRoute from './lib/parse.route';
+import jwtDecode from 'jwt-decode';
+// import AppContext from './lib/app-context';
 
 export default class App extends React.Component {
 
@@ -10,7 +12,8 @@ export default class App extends React.Component {
     super(props);
     this.state = {
       route: parseRoute(window.location.hash),
-      user: {}
+      user: {},
+      isAuthorizing: true
     };
     this.signIn = this.signIn.bind(this);
   }
@@ -19,11 +22,18 @@ export default class App extends React.Component {
     window.addEventListener('hashchange', () => {
       this.setState({ route: parseRoute(window.location.hash) });
     });
+
+    const token = window.localStorage.getItem('token');
+    const user = token ? jwtDecode(token) : null;
+    this.setState({ user, isAuthorizing: false });
+
   }
 
-  signIn(user) {
+  signIn(info) {
+    const { user, token } = info;
+    window.localStorage.setItem('token', token);
     this.setState({
-      user: user.payload
+      user: user
     });
   }
 
@@ -33,7 +43,7 @@ export default class App extends React.Component {
       return <Home />;
     }
     if (route.path === 'login') {
-      return <Login signIn={this.signIn}/>;
+      return <Login onSignIn={this.signIn}/>;
     }
     if (route.path === 'map') {
       const startDate = route.params.get('startDate');
@@ -44,10 +54,16 @@ export default class App extends React.Component {
   }
 
   render() {
+    if (this.state.isAuthorizing) return null;
+    // const { user, route } = this.state;
+    // const { signIn } = this;
+    // const contextValue = { user, route, signIn };
     return (
-    <>
-    { this.renderPage()}
-    </>
+    // <AppContext.Provider value={contextValue}>
+        <>
+          { this.renderPage()}
+        </>
+    /* </AppContext.Provider> */
     );
   }
 }

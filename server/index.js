@@ -6,6 +6,7 @@ const jwt = require('jsonwebtoken');
 const ClientError = require('./client-error');
 const errorMiddleware = require('./error-middleware');
 const staticMiddleware = require('./static-middleware');
+const authorizationMiddleware = require('./authorization-middleware');
 
 const db = new pg.Pool({
   connectionString: process.env.DATABASE_URL,
@@ -65,7 +66,8 @@ app.post('/api/users/sign-in', (req, res, next) => {
         throw new ClientError(401, 'invalid login');
       }
       const { userId, hashedPassword } = user;
-      argon2.verify(hashedPassword, password)
+      return argon2
+        .verify(hashedPassword, password)
         .then(isMatching => {
           if (!isMatching) {
             throw new ClientError(401, 'invalid login');
@@ -80,6 +82,64 @@ app.post('/api/users/sign-in', (req, res, next) => {
     })
     .catch(err => next(err));
 });
+
+app.use(authorizationMiddleware);
+
+app.post('/api/places', (req, res, next) => {
+  const { userId } = req.user;
+  const { tripDate, tripStartTime, tripEndTime, destination, photo } = req.body;
+
+  if (!tripStartTime || !tripDate) {
+    throw new ClientError(400, 'Please enter a date and Time.');
+  }
+
+  const sql = `
+  insert into "places" ("userId", "tripDate","tripStartTime", "tripEndTime","destination","photo")
+  values ($1, $2, $3, $4, $5, $6)
+  returning
+    "placeId",
+    "userId",
+    to_char("tripDate", 'YYYY-MM-DD') as "tripDate",
+    to_char("tripStartTime", 'HH24:MI') as "tripStartTime",
+    to_char("tripEndTime", 'HH24:MI') as "tripEndTime",
+    "destination",
+    "photo"
+`;
+  const params = [userId, tripDate, tripStartTime, tripEndTime, destination, photo];
+
+  db.query(sql, params)
+    .then(result => {
+      const [itinerary] = result.rows;
+      res.status(201).json(itinerary);
+      // console.log(result);
+    });
+});
+
+app.get('/api/places', (req, res, next) => {
+  const { userId } = req.user;
+  const sql = `
+    select *
+      from "places"
+      where "userId" = $1
+  `;
+  const params = [userId];
+  db.query(sql, params)
+    .then(result => {
+      res.json(result.rows);
+    })
+    .catch(err => next(err));
+});
+
+// app.delete('/api/places/:placeId', (req, res, next) => {
+//   const { placeId } = req.body;
+
+//   const sql = `
+//     delete from "places"
+//      where "placeId" = $1
+//      returning *
+//   `;
+
+// });
 
 app.use(errorMiddleware);
 

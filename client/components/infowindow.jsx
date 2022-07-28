@@ -43,20 +43,36 @@ export default class InfoWindow extends React.Component {
     const tripStartTime = this.state.addTime;
     const tripEndTime = addOneHour(tripStartTime, 1);
 
-    addInfo.push({
-      tripDate,
-      tripStartTime,
-      tripEndTime,
-      destination,
-      photo
-    });
+    const userToken = window.localStorage.getItem('token');
 
-    this.setState({
-      schedule: addInfo
-    });
-
-    this.props.onAddItinerary(addInfo);
-
+    fetch('/api/places',
+      {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-Access-Token': userToken
+        },
+        body: JSON.stringify({
+          tripDate,
+          tripStartTime,
+          tripEndTime,
+          destination,
+          photo
+        })
+      })
+      .then(res => res.json())
+      .then(result => {
+        addInfo.push(result);
+        this.setState({
+          schedule: addInfo
+        });
+        this.props.onAddItinerary(addInfo);
+        // alert('Added');
+      }
+      )
+      .catch(error => {
+        console.error('Error:', error);
+      });
   }
 
   render() {
@@ -118,9 +134,9 @@ function addOneHour(startTime, hour) {
     hours = hours - 24;
   }
 
-  if (minutes === 0) {
-    minutes = minutes + '0';
-  }
+  // if (minutes === 0) {
+  //   minutes = minutes + '0';
+  // }
 
   if (minutes < 10) {
     minutes = '0' + minutes;
