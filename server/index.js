@@ -118,7 +118,12 @@ app.post('/api/places', (req, res, next) => {
 app.get('/api/places', (req, res, next) => {
   const { userId } = req.user;
   const sql = `
-    select *
+    select
+      to_char("tripDate", 'YYYY-MM-DD') as "tripDate",
+      to_char("tripStartTime", 'HH24:MI') as "tripStartTime",
+      to_char("tripEndTime", 'HH24:MI') as "tripEndTime",
+      "destination",
+      "photo"
       from "places"
       where "userId" = $1
   `;
@@ -130,16 +135,32 @@ app.get('/api/places', (req, res, next) => {
     .catch(err => next(err));
 });
 
-// app.delete('/api/places/:placeId', (req, res, next) => {
-//   const { placeId } = req.body;
+app.delete('/api/places/:placeId', (req, res, next) => {
+  const placeId = parseInt(req.params.placeId, 10);
 
-//   const sql = `
-//     delete from "places"
-//      where "placeId" = $1
-//      returning *
-//   `;
+  if (!Number.isInteger(placeId) || placeId < 1) {
+    throw new ClientError(400, 'placeId must be a positive integer');
+  }
+  const sql = `
+    delete from "places"
+     where "placeId" = $1
+     returning *
+  `;
 
-// });
+  const params = [placeId];
+  db.query(sql, params)
+    .then(result => {
+      const [deletePlace] = result.rows;
+      if (!deletePlace) {
+        throw new ClientError(404, `cannot find place with placeId ${placeId}`);
+      } else {
+        res.sendStatus(204);
+      }
+
+    })
+    .catch(err => next(err));
+
+});
 
 app.use(errorMiddleware);
 

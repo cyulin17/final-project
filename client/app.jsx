@@ -4,7 +4,7 @@ import Login from './pages/login';
 import MyMap from '../client/components/my-map';
 import parseRoute from './lib/parse.route';
 import jwtDecode from 'jwt-decode';
-// import AppContext from './lib/app-context';
+import AppContext from './lib/app-context';
 
 export default class App extends React.Component {
 
@@ -12,10 +12,11 @@ export default class App extends React.Component {
     super(props);
     this.state = {
       route: parseRoute(window.location.hash),
-      user: {},
+      user: null,
       isAuthorizing: true
     };
     this.signIn = this.signIn.bind(this);
+    this.signOut = this.signOut.bind(this);
   }
 
   componentDidMount() {
@@ -37,6 +38,11 @@ export default class App extends React.Component {
     });
   }
 
+  signOut() {
+    window.localStorage.removeItem('token');
+    this.setState({ user: null });
+  }
+
   renderPage() {
     const { route } = this.state;
     if (route.path === '') {
@@ -55,15 +61,15 @@ export default class App extends React.Component {
 
   render() {
     if (this.state.isAuthorizing) return null;
-    // const { user, route } = this.state;
-    // const { signIn } = this;
-    // const contextValue = { user, route, signIn };
+    const { user, route } = this.state;
+    const { signIn, signOut } = this;
+    const contextValue = { user, route, signIn, signOut };
     return (
-    // <AppContext.Provider value={contextValue}>
+    <AppContext.Provider value={contextValue}>
         <>
           { this.renderPage()}
         </>
-    /* </AppContext.Provider> */
+    </AppContext.Provider>
     );
   }
 }

@@ -44,24 +44,27 @@ export default class MyMap extends React.Component {
   componentDidMount() {
     const userToken = window.localStorage.getItem('token');
 
-    fetch('/api/places',
-      {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-          'X-Access-Token': userToken
+    if (userToken) {
+      fetch('/api/places',
+        {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+            'X-Access-Token': userToken
+          }
+        })
+        .then(res => res.json())
+        .then(result => {
+          this.setState({
+            itinerary: result
+          });
         }
-      })
-      .then(res => res.json())
-      .then(result => {
-        this.setState({
-          itinerary: result
+        )
+        .catch(error => {
+          console.error('Error:', error);
         });
-      }
-      )
-      .catch(error => {
-        console.error('Error:', error);
-      });
+    }
+
   }
 
   areaSearch(query) {
@@ -210,14 +213,30 @@ export default class MyMap extends React.Component {
     });
   }
 
-  handleDelete(schedule) {
+  handleDelete(placeId) {
+
+    const userToken = window.localStorage.getItem('token');
 
     const newItineraryArray = [...this.state.itinerary];
-    const deleteItemIndex = newItineraryArray.findIndex(scheduleObject => scheduleObject === schedule);
+    const deleteItemIndex = newItineraryArray.findIndex(scheduleObject => scheduleObject.placeId === placeId);
     newItineraryArray.splice(deleteItemIndex, 1);
-    this.setState({
-      itinerary: newItineraryArray
-    });
+
+    fetch(`/api/places/${placeId}`,
+      {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-Access-Token': userToken
+        }
+      })
+      .then(res => {
+        this.setState({
+          itinerary: newItineraryArray
+        });
+      })
+      .catch(error => {
+        console.error('Error:', error);
+      });
 
   }
 

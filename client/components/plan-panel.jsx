@@ -20,7 +20,7 @@ export default class PlanPanel extends React.Component {
             {schedule.destination}
           </div>
           <div className="trash-container">
-            <i onClick={() => this.props.onHandleDelete(schedule)} className="fas fa-trash-alt"></i>
+            <i onClick={() => this.props.onHandleDelete(schedule.placeId)} className="fas fa-trash-alt"></i>
           </div>
         </div>
       </li>
