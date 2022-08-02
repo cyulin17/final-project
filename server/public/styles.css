@@ -24,16 +24,14 @@ body {
 }
 
 .sign-up,
-.log-in {
+.log-in,
+.log-out {
   color: rgb(0 0 0);
 }
 
-.sign-up:hover {
-  color: #eb034f;
-  font-weight: 600;
-}
-
-.log-in:hover {
+.sign-up:hover,
+.log-in:hover,
+.log-out:hover {
   color: #eb034f;
   font-weight: 600;
 }

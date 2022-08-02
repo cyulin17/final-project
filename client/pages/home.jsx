@@ -7,12 +7,12 @@ import AppContext from '../lib/app-context';
 export default class Home extends React.Component {
 
   render() {
-
+    const { getDate } = this.context;
     return (
       <>
         <Header />
         <Carousel />
-        <Plan />
+        <Plan getDate={getDate}/>
       </>
     );
   }

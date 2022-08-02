@@ -1,4 +1,5 @@
 import React from 'react';
+import AppContext from '../lib/app-context';
 
 const regions = [
   { number: '01', name: 'Hokkaido' },
@@ -126,6 +127,8 @@ export default class Search extends React.Component {
     const categories = catogory.map(myCategory =>
       <li onClick={() => this.handleClick(myCategory.name)} key={myCategory.number} className="area-item">{myCategory.name}</li>
     );
+
+    const { signOut } = this.context;
     return (
       <nav className="navbar navbar-light">
         <div className="container-fluid justify-content-center justify-content-md-start">
@@ -179,8 +182,12 @@ export default class Search extends React.Component {
             </div>
         </div>
           </form>
+          <a onClick={signOut} className="nav-link log-out" href="#">Log Out</a>
         </div>
+
       </nav>
     );
   }
 }
+
+Search.contextType = AppContext;

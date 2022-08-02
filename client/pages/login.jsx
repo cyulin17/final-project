@@ -45,7 +45,6 @@ export default class Login extends React.Component {
 
       })
       .then(info => {
-        // localStorage.setItem('token', info.token);
         if (info.token && info.user) {
           this.props.onSignIn(info);
         }

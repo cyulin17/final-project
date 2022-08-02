@@ -1,6 +1,5 @@
 import React from 'react';
 import AppContext from '../lib/app-context';
-import Redirect from './redirect';
 
 export default class Plan extends React.Component {
 
@@ -27,15 +26,21 @@ export default class Plan extends React.Component {
   handleSubmit(event) {
     event.preventDefault();
 
-    if (!this.context.user) {
-        <Redirect to="login"/>;
-    } else {
+    this.context.getDate(this.state);
 
-      const { startDate, nextDate } = this.state;
-      const searchParams = new URLSearchParams({ startDate, nextDate });
-      const newHash = `#map?${searchParams}`;
-      window.location.hash = newHash;
+    // const searchParams = new URLSearchParams({ startDate, nextDate });
+
+    if (!this.context.user) {
+      window.location.hash = '#login';
+    // const newHash = `#login?${searchParams}`;
+    // window.location.hash = '#login';
+    } else {
+      window.location.hash = '#map';
     }
+    // } else {
+    //   const newHash = `#map?${searchParams}`;
+    //   window.location.hash = newHash;
+    // }
 
   }
 

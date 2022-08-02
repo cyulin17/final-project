@@ -13,10 +13,12 @@ export default class App extends React.Component {
     this.state = {
       route: parseRoute(window.location.hash),
       user: null,
-      isAuthorizing: true
+      isAuthorizing: true,
+      date: {}
     };
     this.signIn = this.signIn.bind(this);
     this.signOut = this.signOut.bind(this);
+    this.getDate = this.getDate.bind(this);
   }
 
   componentDidMount() {
@@ -43,8 +45,12 @@ export default class App extends React.Component {
     this.setState({ user: null });
   }
 
+  getDate(date) {
+    this.setState({ date: date });
+  }
+
   renderPage() {
-    const { route } = this.state;
+    const { route, date } = this.state;
     if (route.path === '') {
       return <Home />;
     }
@@ -52,18 +58,18 @@ export default class App extends React.Component {
       return <Login onSignIn={this.signIn}/>;
     }
     if (route.path === 'map') {
-      const startDate = route.params.get('startDate');
-      const nextDate = route.params.get('nextDate');
-      return <MyMap startDate={startDate} nextDate={nextDate}/>;
+      // const startDate = route.params.get('startDate');
+      // const nextDate = route.params.get('nextDate');
+      return <MyMap startDate={date.startDate} nextDate={date.nextDate}/>;
     }
 
   }
 
   render() {
     if (this.state.isAuthorizing) return null;
-    const { user, route } = this.state;
-    const { signIn, signOut } = this;
-    const contextValue = { user, route, signIn, signOut };
+    const { user, route, date } = this.state;
+    const { signIn, signOut, getDate } = this;
+    const contextValue = { user, route, date, signIn, signOut, getDate };
     return (
     <AppContext.Provider value={contextValue}>
         <>

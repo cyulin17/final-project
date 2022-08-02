@@ -1,8 +1,10 @@
 import React from 'react';
+import AppContext from '../lib/app-context';
 
 export default class PlanPanel extends React.Component {
 
   render() {
+
     const { schedule, startDate } = this.props;
 
     const schedules = schedule.map(schedule =>
@@ -29,7 +31,8 @@ export default class PlanPanel extends React.Component {
     return (
     <div className="panel">
       <div className="panel-header">
-        <div className="travel-date">{startDate}
+        <div className="travel-date">
+          {startDate}
           <div className="arrow-container">
             <span className="previous"><i className="fas fa-caret-left left-arrow"></i></span>
             <span className="next"><i className="fas fa-caret-right right-arrow"></i></span>
@@ -43,3 +46,5 @@ export default class PlanPanel extends React.Component {
     );
   }
 }
+
+PlanPanel.contextType = AppContext;
