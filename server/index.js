@@ -119,6 +119,8 @@ app.get('/api/places', (req, res, next) => {
   const { userId } = req.user;
   const sql = `
     select
+      "placeId",
+      "userId",
       to_char("tripDate", 'YYYY-MM-DD') as "tripDate",
       to_char("tripStartTime", 'HH24:MI') as "tripStartTime",
       to_char("tripEndTime", 'HH24:MI') as "tripEndTime",

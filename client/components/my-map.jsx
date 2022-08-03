@@ -44,27 +44,24 @@ export default class MyMap extends React.Component {
   componentDidMount() {
     const userToken = window.localStorage.getItem('token');
 
-    if (userToken) {
-      fetch('/api/places',
-        {
-          method: 'GET',
-          headers: {
-            'Content-Type': 'application/json',
-            'X-Access-Token': userToken
-          }
-        })
-        .then(res => res.json())
-        .then(result => {
-          this.setState({
-            itinerary: result
-          });
+    fetch('/api/places',
+      {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-Access-Token': userToken
         }
-        )
-        .catch(error => {
-          console.error('Error:', error);
+      })
+      .then(res => res.json())
+      .then(result => {
+        this.setState({
+          itinerary: result
         });
-    }
-
+      }
+      )
+      .catch(error => {
+        console.error('Error:', error);
+      });
   }
 
   areaSearch(query) {
@@ -197,10 +194,10 @@ export default class MyMap extends React.Component {
     this.setState({ showInfo: false });
   }
 
-  addItinerary(scheduleArray) {
+  addItinerary(addInfo) {
 
     this.setState({
-      itinerary: this.state.itinerary.concat(scheduleArray).sort((a, b) => {
+      itinerary: this.state.itinerary.concat(addInfo).sort((a, b) => {
         if (a.tripStartTime < b.tripStartTime) {
           return -1;
         }
@@ -244,7 +241,6 @@ export default class MyMap extends React.Component {
 
     const { places, info } = this.state;
     const { startDate, nextDate } = this.props;
-
     return (
       <div>
         <Search onAreaSearch={this.areaSearch} onCategorySearch={this.categorySearch} onKeywordSearch={this.keywordSearch}/>
@@ -280,7 +276,7 @@ export default class MyMap extends React.Component {
 
           </GoogleMapReact>
          </div>
-        <PlanPanel startDate={startDate} nextDate={nextDate} schedule={this.state.itinerary} onHandleDelete={this.handleDelete}/>
+        <PlanPanel startDate={startDate} nextDate={nextDate} itinerary={this.state.itinerary} onHandleDelete={this.handleDelete}/>
       </div>
 
     );

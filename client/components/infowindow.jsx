@@ -67,7 +67,6 @@ export default class InfoWindow extends React.Component {
           schedule: addInfo
         });
         this.props.onAddItinerary(addInfo);
-        // alert('Added');
       }
       )
       .catch(error => {
@@ -133,10 +132,6 @@ function addOneHour(startTime, hour) {
   if (hours > 23) {
     hours = hours - 24;
   }
-
-  // if (minutes === 0) {
-  //   minutes = minutes + '0';
-  // }
 
   if (minutes < 10) {
     minutes = '0' + minutes;

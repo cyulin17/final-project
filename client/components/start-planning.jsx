@@ -26,21 +26,12 @@ export default class Plan extends React.Component {
   handleSubmit(event) {
     event.preventDefault();
 
-    this.context.getDate(this.state);
-
-    // const searchParams = new URLSearchParams({ startDate, nextDate });
-
     if (!this.context.user) {
       window.location.hash = '#login';
-    // const newHash = `#login?${searchParams}`;
-    // window.location.hash = '#login';
+      this.context.getDate(this.state);
     } else {
       window.location.hash = '#map';
     }
-    // } else {
-    //   const newHash = `#map?${searchParams}`;
-    //   window.location.hash = newHash;
-    // }
 
   }
 

@@ -58,8 +58,6 @@ export default class App extends React.Component {
       return <Login onSignIn={this.signIn}/>;
     }
     if (route.path === 'map') {
-      // const startDate = route.params.get('startDate');
-      // const nextDate = route.params.get('nextDate');
       return <MyMap startDate={date.startDate} nextDate={date.nextDate}/>;
     }
 

@@ -12,21 +12,26 @@ export default class Header extends React.Component {
             <a className="navbar-brand logo" href="#">
               GotoJapan
             </a>
+            {user === null &&
             <ul className="nav justify-content-end">
               <li className="nav-item">
                 <a className="nav-link sign-up" href="#">Sign Up</a>
               </li>
-              { user === null &&
               <li className="nav-item">
                 <a className="nav-link log-in" href="#login">Log In</a>
               </li>
+              </ul>
               }
               { user !== null &&
+              <ul className="nav justify-content-end">
               <li className="nav-item">
-                <a onClick={signOut} className="nav-link log-out" href="#">Log Out</a>
+                <a className="nav-link log-out" href="#map">My Trips</a>
               </li>
-              }
+              <li className="nav-item">
+                  <a onClick={signOut} className="nav-link log-out" href="#">Log Out</a>
+              </li>
             </ul>
+              }
           </div>
         </nav>
       </header>

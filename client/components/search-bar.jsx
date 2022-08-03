@@ -180,7 +180,7 @@ export default class Search extends React.Component {
                 value={this.state.keyword}/>
                 <span className="search-icon"><button className="search" type="submit"><i className="fas fa-search icon-size"></i></button></span>
             </div>
-        </div>
+          </div>
           </form>
           <a onClick={signOut} className="nav-link log-out" href="#">Log Out</a>
         </div>

@@ -5,9 +5,14 @@ export default class PlanPanel extends React.Component {
 
   render() {
 
-    const { schedule, startDate } = this.props;
+    const { itinerary, startDate } = this.props;
 
-    const schedules = schedule.map(schedule =>
+    let tripDate = '';
+    if (itinerary.length !== 0) {
+      tripDate = itinerary[0].tripDate;
+    }
+
+    const schedules = itinerary.map(schedule =>
       <li key={schedule.destination} className="schedule-box">
         <div className="schedule-container">
           <div className="time-container">
@@ -26,18 +31,34 @@ export default class PlanPanel extends React.Component {
           </div>
         </div>
       </li>
+
     );
 
     return (
     <div className="panel">
       <div className="panel-header">
+        { startDate !== undefined &&
         <div className="travel-date">
+          <div>
           {startDate}
+          </div>
           <div className="arrow-container">
             <span className="previous"><i className="fas fa-caret-left left-arrow"></i></span>
             <span className="next"><i className="fas fa-caret-right right-arrow"></i></span>
           </div>
         </div>
+          }
+          { startDate === undefined &&
+            <div className="travel-date">
+              <div>
+              {tripDate}
+              </div>
+              <div className="arrow-container">
+                <span className="previous"><i className="fas fa-caret-left left-arrow"></i></span>
+                <span className="next"><i className="fas fa-caret-right right-arrow"></i></span>
+              </div>
+            </div>
+          }
         </div>
         <ul className="ul-padding">
           {schedules}
