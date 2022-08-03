@@ -1,4 +1,5 @@
 import React from 'react';
+import AppContext from '../lib/app-context';
 
 const regions = [
   { number: '01', name: 'Hokkaido' },
@@ -126,9 +127,11 @@ export default class Search extends React.Component {
     const categories = catogory.map(myCategory =>
       <li onClick={() => this.handleClick(myCategory.name)} key={myCategory.number} className="area-item">{myCategory.name}</li>
     );
+
+    const { signOut } = this.context;
     return (
       <nav className="navbar navbar-light">
-        <div className="container-fluid justify-content-start">
+        <div className="container-fluid justify-content-center justify-content-md-start">
           <a className="navbar-brand logo" href="#">
             GotoJapan
           </a>
@@ -150,14 +153,14 @@ export default class Search extends React.Component {
               </ul>
             </div>
             <div>
-              <label htmlFor="catogory"></label>
+              <label htmlFor="category"></label>
                 <input
                 onFocus={this.onFocus}
-                className="catogory"
+                className="category"
                 type="search"
                 name="setCategory"
                 id="category"
-                placeholder="Catogory"
+                placeholder="Category"
                 onChange={this.handleInputChange}
                 value={this.state.setCategory}/>
                 <ul className={this.state.onFocus === 'category' ? 'category-menu' : 'hidden'}>
@@ -177,10 +180,14 @@ export default class Search extends React.Component {
                 value={this.state.keyword}/>
                 <span className="search-icon"><button className="search" type="submit"><i className="fas fa-search icon-size"></i></button></span>
             </div>
-        </div>
+          </div>
           </form>
+          <a onClick={signOut} className="nav-link log-out" href="#">Log Out</a>
         </div>
+
       </nav>
     );
   }
 }
+
+Search.contextType = AppContext;

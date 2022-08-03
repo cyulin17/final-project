@@ -45,11 +45,11 @@ export default class Login extends React.Component {
 
       })
       .then(info => {
-        localStorage.setItem('token', info.token);
-        this.props.signIn(info);
-        location.hash = '#';
+        if (info.token && info.user) {
+          this.props.onSignIn(info);
+        }
+        window.location.hash = '#map';
         alert('Login successfully!');
-
       }
       )
       .catch(error => {

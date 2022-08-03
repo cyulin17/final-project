@@ -6,6 +6,7 @@ const jwt = require('jsonwebtoken');
 const ClientError = require('./client-error');
 const errorMiddleware = require('./error-middleware');
 const staticMiddleware = require('./static-middleware');
+const authorizationMiddleware = require('./authorization-middleware');
 
 const db = new pg.Pool({
   connectionString: process.env.DATABASE_URL,
@@ -32,11 +33,11 @@ app.post('/api/users/sign-up', (req, res, next) => {
     .hash(password)
     .then(hashedPassword => {
       const sql = `
-        insert into "users" ("firstName", "lastName", "email", "password")
+        insert into "users" ("firstName", "lastName", "email", "hashedPassword")
         values ($1, $2, $3, $4)
         returning *
       `;
-      const params = [firstname, lastname, email, password];
+      const params = [firstname, lastname, email, hashedPassword];
       return db.query(sql, params);
     })
     .then(result => {
@@ -53,8 +54,7 @@ app.post('/api/users/sign-in', (req, res, next) => {
   }
   const sql = `
     select "userId",
-           "email",
-           "password"
+           "hashedPassword"
       from "users"
      where "email" = $1
   `;
@@ -65,24 +65,103 @@ app.post('/api/users/sign-in', (req, res, next) => {
       if (!user) {
         throw new ClientError(401, 'invalid login');
       }
-
-      argon2.verify(user.password, password)
+      const { userId, hashedPassword } = user;
+      return argon2
+        .verify(hashedPassword, password)
         .then(isMatching => {
           if (!isMatching) {
             throw new ClientError(401, 'invalid login');
           }
-          const payload = {
-            userId: user.userId,
-            email: email
-          };
+          const payload = { userId, email };
           const token = jwt.sign(payload, process.env.TOKEN_SECRET);
-          res.json({ token, payload });
+          res.json({ token, user: payload });
 
         })
         .catch(err => next(err));
 
     })
     .catch(err => next(err));
+});
+
+app.use(authorizationMiddleware);
+
+app.post('/api/places', (req, res, next) => {
+  const { userId } = req.user;
+  const { tripDate, tripStartTime, tripEndTime, destination, photo } = req.body;
+
+  if (!tripStartTime || !tripDate) {
+    throw new ClientError(400, 'Please enter a date and Time.');
+  }
+
+  const sql = `
+  insert into "places" ("userId", "tripDate","tripStartTime", "tripEndTime","destination","photo")
+  values ($1, $2, $3, $4, $5, $6)
+  returning
+    "placeId",
+    "userId",
+    to_char("tripDate", 'YYYY-MM-DD') as "tripDate",
+    to_char("tripStartTime", 'HH24:MI') as "tripStartTime",
+    to_char("tripEndTime", 'HH24:MI') as "tripEndTime",
+    "destination",
+    "photo"
+`;
+  const params = [userId, tripDate, tripStartTime, tripEndTime, destination, photo];
+
+  db.query(sql, params)
+    .then(result => {
+      const [itinerary] = result.rows;
+      res.status(201).json(itinerary);
+      // console.log(result);
+    });
+});
+
+app.get('/api/places', (req, res, next) => {
+  const { userId } = req.user;
+  const sql = `
+    select
+      "placeId",
+      "userId",
+      to_char("tripDate", 'YYYY-MM-DD') as "tripDate",
+      to_char("tripStartTime", 'HH24:MI') as "tripStartTime",
+      to_char("tripEndTime", 'HH24:MI') as "tripEndTime",
+      "destination",
+      "photo"
+      from "places"
+      where "userId" = $1
+  `;
+  const params = [userId];
+  db.query(sql, params)
+    .then(result => {
+      res.json(result.rows);
+    })
+    .catch(err => next(err));
+});
+
+app.delete('/api/places/:placeId', (req, res, next) => {
+  const placeId = parseInt(req.params.placeId, 10);
+
+  if (!Number.isInteger(placeId) || placeId < 1) {
+    throw new ClientError(400, 'placeId must be a positive integer');
+  }
+  const sql = `
+    delete from "places"
+     where "placeId" = $1
+     returning *
+  `;
+
+  const params = [placeId];
+  db.query(sql, params)
+    .then(result => {
+      const [deletePlace] = result.rows;
+      if (!deletePlace) {
+        throw new ClientError(404, `cannot find place with placeId ${placeId}`);
+      } else {
+        res.sendStatus(204);
+      }
+
+    })
+    .catch(err => next(err));
+
 });
 
 app.use(errorMiddleware);

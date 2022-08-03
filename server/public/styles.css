@@ -2,6 +2,19 @@ body {
   font-family: Imprima, sans-serif;
 }
 
+.area-menu,
+.category-menu,
+.close,
+.button,
+.image,
+.left-arrow,
+.right-arrow,
+.add,
+.schedule-box,
+.destination-website {
+  cursor: pointer;
+}
+
 .logo {
   font-family: "Delius Swash Caps", cursive;
   font-size: 25px;
@@ -11,16 +24,14 @@ body {
 }
 
 .sign-up,
-.log-in {
+.log-in,
+.log-out {
   color: rgb(0 0 0);
 }
 
-.sign-up:hover {
-  color: #eb034f;
-  font-weight: 600;
-}
-
-.log-in:hover {
+.sign-up:hover,
+.log-in:hover,
+.log-out:hover {
   color: #eb034f;
   font-weight: 600;
 }
@@ -52,17 +63,10 @@ body {
 
 .plan-container {
   width: 520px;
-  position: relative;
   display: flex;
   margin: 80px auto;
   text-align: center;
   box-shadow: 5px 5px 20px 1px #82878b;
-}
-
-.calender {
-  height: 50px;
-  width: 200px;
-  font-size: 1.3rem;
 }
 
 .plan-button {
@@ -71,29 +75,30 @@ body {
   height: 50px;
   background-color: #eb034f;
   font-size: 25px;
-}
-
-.plan-button a {
   color: #fff;
-  vertical-align: text-top;
   letter-spacing: 0.2rem;
   padding-left: 5px;
 }
 
-input[name="to"] {
-  border: 1px solid #ccc;
-  border-right: none;
+input[name="startDate"] {
+  height: 50px;
+  width: 200px;
+  border: none;
   padding-top: 1.2rem;
   padding-left: 2.5rem;
   color: #424242;
+  font-size: 1.3rem;
 }
 
-input[name="from"] {
-  border: 1px solid #ccc;
-  border-right: none;
+input[name="nextDate"] {
+  height: 50px;
+  width: 200px;
+  border: none;
+  border-left: 1px solid #ccc;
   padding-top: 1.2rem;
   padding-left: 2.5rem;
   color: #424242;
+  font-size: 1.3rem;
 }
 
 input:focus {
@@ -213,7 +218,6 @@ input[type="search"] {
   padding: 0;
   margin: 0;
   width: 186px;
-  cursor: pointer;
   border: 1px solid #b0b0b0;
   border-top-left-radius: 10px;
   border-bottom-left-radius: 10px;
@@ -229,7 +233,6 @@ input[type="search"] {
   padding: 0;
   margin: 0;
   width: 186px;
-  cursor: pointer;
   border: 1px solid #b0b0b0;
   border-top-left-radius: 10px;
   border-bottom-left-radius: 10px;
@@ -320,17 +323,7 @@ input[type="search"] {
   width: 550px;
   height: 100%;
   background-color: #fff;
-}
-
-.shadow {
-  position: absolute;
-  width: 100%;
-  height: 100%;
-  background-color: pink;
-}
-
-.close {
-  cursor: pointer;
+  z-index: 10;
 }
 
 .destination-address {
@@ -368,7 +361,7 @@ input[type="search"] {
 }
 
 .img-container img {
-  width: 550px;
+  width: 100%;
   height: 350px;
   object-fit: cover;
 }
@@ -379,7 +372,7 @@ input[type="search"] {
   line-height: 30px;
   text-align: center;
   margin-top: 50px;
-  margin-left: 300px;
+  margin-left: 175px;
   color: #eb034f;
   border: 1px solid #eb034f;
   border-radius: 5px;
@@ -387,7 +380,6 @@ input[type="search"] {
 
 .date-time {
   margin-top: 30px;
-  margin-left: 300px;
   text-align: center;
 }
 

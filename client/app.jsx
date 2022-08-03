@@ -1,8 +1,10 @@
 import React from 'react';
 import Home from './pages/home';
 import Login from './pages/login';
-import Plan from './pages/plan';
+import MyMap from '../client/components/my-map';
 import parseRoute from './lib/parse.route';
+import jwtDecode from 'jwt-decode';
+import AppContext from './lib/app-context';
 
 export default class App extends React.Component {
 
@@ -10,41 +12,68 @@ export default class App extends React.Component {
     super(props);
     this.state = {
       route: parseRoute(window.location.hash),
-      user: {}
+      user: null,
+      isAuthorizing: true,
+      date: {}
     };
     this.signIn = this.signIn.bind(this);
+    this.signOut = this.signOut.bind(this);
+    this.getDate = this.getDate.bind(this);
   }
 
   componentDidMount() {
     window.addEventListener('hashchange', () => {
       this.setState({ route: parseRoute(window.location.hash) });
     });
+
+    const token = window.localStorage.getItem('token');
+    const user = token ? jwtDecode(token) : null;
+    this.setState({ user, isAuthorizing: false });
+
   }
 
-  signIn(user) {
+  signIn(info) {
+    const { user, token } = info;
+    window.localStorage.setItem('token', token);
     this.setState({
-      user: user.payload
+      user: user
     });
   }
 
+  signOut() {
+    window.localStorage.removeItem('token');
+    this.setState({ user: null });
+  }
+
+  getDate(date) {
+    this.setState({ date: date });
+  }
+
   renderPage() {
-    const { route } = this.state;
+    const { route, date } = this.state;
     if (route.path === '') {
       return <Home />;
     }
     if (route.path === 'login') {
-      return <Login signIn={this.signIn}/>;
+      return <Login onSignIn={this.signIn}/>;
     }
-    if (route.path === 'plan') {
-      return <Plan />;
+    if (route.path === 'map') {
+      return <MyMap startDate={date.startDate} nextDate={date.nextDate}/>;
     }
+
   }
 
   render() {
+    if (this.state.isAuthorizing) return null;
+    const { user, route, date } = this.state;
+    const { signIn, signOut, getDate } = this;
+    const contextValue = { user, route, date, signIn, signOut, getDate };
     return (
-    <>
-    { this.renderPage()}
-    </>
+    <AppContext.Provider value={contextValue}>
+        <>
+          { this.renderPage()}
+        </>
+    </AppContext.Provider>
     );
   }
 }

@@ -122,9 +122,9 @@ export default class Carousel extends React.Component {
     return (
       <div>
         <ul className="image-container">
-          <li className="image"><img src={this.state.image1} alt="" /></li>
-          <li className="image"><img src={this.state.image2} alt="" /></li>
-          <li className="image"><img src={this.state.image3} alt="" /></li>
+          <li className="image "><img src={this.state.image1} alt="" /></li>
+          <li className="image image-box"><img src={this.state.image2} alt="" /></li>
+          <li className="image image-box"><img src={this.state.image3} alt="" /></li>
         </ul>
         <ul className="button-container">
         {button}

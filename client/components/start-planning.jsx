@@ -1,4 +1,5 @@
 import React from 'react';
+import AppContext from '../lib/app-context';
 
 export default class Plan extends React.Component {
 
@@ -14,30 +15,41 @@ export default class Plan extends React.Component {
   }
 
   handleChange(event) {
+
+    const value = event.target.value;
+    const name = event.target.name;
     this.setState({
-      startDate: event.target.startDate,
-      nextDate: event.target.nextDate
+      [name]: value
     });
   }
 
   handleSubmit(event) {
     event.preventDefault();
+
+    if (!this.context.user) {
+      window.location.hash = '#login';
+      this.context.getDate(this.state);
+    } else {
+      window.location.hash = '#map';
+    }
+
   }
 
   render() {
+
     return (
       <form onSubmit={this.handleSubmit}>
         <div className="plan-container">
         <div className="calendar-container">
-            <label htmlFor="from">Travel Date From</label>
-            <input className="calender" type="date" name="from" id="from" value={this.state.startDate} onChange={this.handleChange}/>
+            <label htmlFor="startDate">Travel Date From</label>
+            <input type="date" name="startDate" id="startDate" value={this.state.startDate} onChange={this.handleChange}/>
         </div>
         <div>
-            <label htmlFor="to">To</label>
-            <input className="calender" type="date" name="to" id="to" value={this.state.nextDate} onChange={this.handleChange} />
+            <label htmlFor="nextDate">To</label>
+            <input type="date" name="nextDate" id="nextDate" value={this.state.nextDate} onChange={this.handleChange} />
         </div>
         <div>
-          <button className="plan-button"><a href='#plan'>PLAN</a></button>
+            <button className="plan-button" type="submit">PLAN</button>
           </div>
         </div>
       </form>
@@ -78,3 +90,5 @@ function nextDate() {
   }
   return `${year}-${month}-${day}`;
 }
+
+Plan.contextType = AppContext;

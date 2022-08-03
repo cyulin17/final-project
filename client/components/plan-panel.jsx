@@ -1,17 +1,18 @@
 import React from 'react';
+import AppContext from '../lib/app-context';
 
 export default class PlanPanel extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-    };
-  }
 
   render() {
 
-    const { schedule } = this.props;
+    const { itinerary, startDate } = this.props;
 
-    const schedules = schedule.map(schedule =>
+    let tripDate = '';
+    if (itinerary.length !== 0) {
+      tripDate = itinerary[0].tripDate;
+    }
+
+    const schedules = itinerary.map(schedule =>
       <li key={schedule.destination} className="schedule-box">
         <div className="schedule-container">
           <div className="time-container">
@@ -26,21 +27,38 @@ export default class PlanPanel extends React.Component {
             {schedule.destination}
           </div>
           <div className="trash-container">
-            <i onClick={() => this.props.onHandleDelete(schedule)} className="fas fa-trash-alt"></i>
+            <i onClick={() => this.props.onHandleDelete(schedule.placeId)} className="fas fa-trash-alt"></i>
           </div>
         </div>
       </li>
+
     );
 
     return (
     <div className="panel">
       <div className="panel-header">
-        <div className="travel-date">12/10/2021
+        { startDate !== undefined &&
+        <div className="travel-date">
+          <div>
+          {startDate}
+          </div>
           <div className="arrow-container">
             <span className="previous"><i className="fas fa-caret-left left-arrow"></i></span>
             <span className="next"><i className="fas fa-caret-right right-arrow"></i></span>
           </div>
         </div>
+          }
+          { startDate === undefined &&
+            <div className="travel-date">
+              <div>
+              {tripDate}
+              </div>
+              <div className="arrow-container">
+                <span className="previous"><i className="fas fa-caret-left left-arrow"></i></span>
+                <span className="next"><i className="fas fa-caret-right right-arrow"></i></span>
+              </div>
+            </div>
+          }
         </div>
         <ul className="ul-padding">
           {schedules}
@@ -49,3 +67,5 @@ export default class PlanPanel extends React.Component {
     );
   }
 }
+
+PlanPanel.contextType = AppContext;

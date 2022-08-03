@@ -1,6 +1,6 @@
 import React from 'react';
 import GoogleMapReact from 'google-map-react';
-import Search from './search';
+import Search from './search-bar';
 import InfoWindow from './infowindow';
 import PlanPanel from './plan-panel';
 
@@ -39,6 +39,29 @@ export default class MyMap extends React.Component {
       map,
       maps
     });
+  }
+
+  componentDidMount() {
+    const userToken = window.localStorage.getItem('token');
+
+    fetch('/api/places',
+      {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-Access-Token': userToken
+        }
+      })
+      .then(res => res.json())
+      .then(result => {
+        this.setState({
+          itinerary: result
+        });
+      }
+      )
+      .catch(error => {
+        console.error('Error:', error);
+      });
   }
 
   areaSearch(query) {
@@ -171,10 +194,10 @@ export default class MyMap extends React.Component {
     this.setState({ showInfo: false });
   }
 
-  addItinerary(scheduleArray) {
+  addItinerary(addInfo) {
 
     this.setState({
-      itinerary: this.state.itinerary.concat(scheduleArray).sort((a, b) => {
+      itinerary: this.state.itinerary.concat(addInfo).sort((a, b) => {
         if (a.tripStartTime < b.tripStartTime) {
           return -1;
         }
@@ -187,24 +210,50 @@ export default class MyMap extends React.Component {
     });
   }
 
-  handleDelete(schedule) {
+  handleDelete(placeId) {
+
+    const userToken = window.localStorage.getItem('token');
 
     const newItineraryArray = [...this.state.itinerary];
-    const deleteItemIndex = newItineraryArray.findIndex(scheduleObject => scheduleObject === schedule);
+    const deleteItemIndex = newItineraryArray.findIndex(scheduleObject => scheduleObject.placeId === placeId);
     newItineraryArray.splice(deleteItemIndex, 1);
-    this.setState({
-      itinerary: newItineraryArray
-    });
+
+    fetch(`/api/places/${placeId}`,
+      {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-Access-Token': userToken
+        }
+      })
+      .then(res => {
+        this.setState({
+          itinerary: newItineraryArray
+        });
+      })
+      .catch(error => {
+        console.error('Error:', error);
+      });
 
   }
 
   render() {
 
     const { places, info } = this.state;
-
+    const { startDate, nextDate } = this.props;
     return (
-      <div style={ { height: '100vh' }}>
+      <div>
         <Search onAreaSearch={this.areaSearch} onCategorySearch={this.categorySearch} onKeywordSearch={this.keywordSearch}/>
+        <div style={ { height: '100vh' }}>
+          {info.map(result => (
+            <InfoWindow
+              showInfo={this.state.showInfo}
+              key={result.storeId}
+              result={result}
+              handleInfowindowClosed={this.handleInfowindowClosed}
+              onAddItinerary={this.addItinerary}
+            />
+          ))}
         <GoogleMapReact
           bootstrapURLKeys={{
             key: process.env.GOOGLE_TOKEN,
@@ -226,18 +275,8 @@ export default class MyMap extends React.Component {
               ))}
 
           </GoogleMapReact>
-
-        {info.map(result => (
-          <InfoWindow
-            showInfo={this.state.showInfo}
-            key={result.storeId}
-            result={result}
-            handleInfowindowClosed={this.handleInfowindowClosed}
-            onAddItinerary={this.addItinerary}
-          />
-        ))}
-        <PlanPanel schedule={this.state.itinerary} onHandleDelete={this.handleDelete}/>
-
+         </div>
+        <PlanPanel startDate={startDate} nextDate={nextDate} itinerary={this.state.itinerary} onHandleDelete={this.handleDelete}/>
       </div>
 
     );
