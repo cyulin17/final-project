@@ -2,14 +2,64 @@ import React from 'react';
 import AppContext from '../lib/app-context';
 
 export default class PlanPanel extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      startDate: null,
+      endDate: null
+    };
+
+    this.handleNext = this.handleNext.bind(this);
+    this.handlePrev = this.handlePrev.bind(this);
+
+  }
+
+  componentDidMount() {
+    this.setState({
+      startDate: this.context.date.startDate,
+      endDate: this.context.date.nextDate
+    });
+  }
+
+  handleNext() {
+
+    const firstDay = new Date(this.state.startDate);
+    if (this.state.startDate !== this.state.endDate) {
+      this.setState({
+        startDate: new Date(firstDay.setDate(firstDay.getDate() + 1)).toISOString().slice(0, 10)
+      });
+    }
+
+  }
+
+  handlePrev() {
+    const currentDay = new Date(this.state.startDate);
+    if (this.state.startDate !== this.context.date.startDate) {
+      this.setState({
+        startDate: new Date(currentDay.setDate(currentDay.getDate() - 1)).toISOString().slice(0, 10)
+      });
+    }
+  }
 
   render() {
 
-    const { itinerary, startDate } = this.props;
+    const { itinerary } = this.props;
+    // let tripDate = '';
+    // if (itinerary.length !== 0) {
+    //   tripDate = itinerary[0].tripDate;
+    // }
 
-    let tripDate = '';
-    if (itinerary.length !== 0) {
-      tripDate = itinerary[0].tripDate;
+    let prevButton = '';
+    let nextButton = '';
+    if (this.state.startDate === this.context.date.startDate) {
+      prevButton = 'fas fa-caret-left left-arrow hidden';
+      nextButton = 'fas fa-caret-right right-arrow';
+    } else if (this.state.startDate === this.context.date.nextDate) {
+      prevButton = 'fas fa-caret-left left-arrow';
+      nextButton = 'fas fa-caret-right right-arrow hidden';
+    } else {
+      prevButton = 'fas fa-caret-left left-arrow';
+      nextButton = 'fas fa-caret-right right-arrow';
     }
 
     const schedules = itinerary.map(schedule =>
@@ -37,28 +87,27 @@ export default class PlanPanel extends React.Component {
     return (
     <div className="panel">
       <div className="panel-header">
-        { startDate !== undefined &&
+        {/* { startDate !== undefined && */}
         <div className="travel-date">
           <div>
-          {startDate}
+          {this.state.startDate}
           </div>
           <div className="arrow-container">
-            <span className="previous"><i className="fas fa-caret-left left-arrow"></i></span>
-            <span className="next"><i className="fas fa-caret-right right-arrow"></i></span>
+              <span className="previous"><i onClick={this.handlePrev} className={prevButton}></i></span>
+              <span className="next"><i onClick={this.handleNext} className={nextButton}></i></span>
           </div>
         </div>
-          }
-          { startDate === undefined &&
+          {/* { startDate === undefined &&
             <div className="travel-date">
               <div>
-              {tripDate}
+              {this.state.startDate}
               </div>
               <div className="arrow-container">
-                <span className="previous"><i className="fas fa-caret-left left-arrow"></i></span>
-                <span className="next"><i className="fas fa-caret-right right-arrow"></i></span>
+                <span className="previous"><i onClick={this.handlePrev} className="fas fa-caret-left left-arrow"></i></span>
+                <span className="next"><i onClick={this.handleNext} className="fas fa-caret-right right-arrow"></i></span>
               </div>
             </div>
-          }
+          } */}
         </div>
         <ul className="ul-padding">
           {schedules}
@@ -67,5 +116,4 @@ export default class PlanPanel extends React.Component {
     );
   }
 }
-
 PlanPanel.contextType = AppContext;
