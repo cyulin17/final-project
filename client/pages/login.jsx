@@ -1,4 +1,5 @@
 import React from 'react';
+import AppContext from '../lib/app-context';
 
 export default class Login extends React.Component {
 
@@ -55,6 +56,7 @@ export default class Login extends React.Component {
       .catch(error => {
         console.error('Error:', error);
       });
+
   }
 
   render() {
@@ -82,3 +84,4 @@ export default class Login extends React.Component {
     );
   }
 }
+Login.contextType = AppContext;

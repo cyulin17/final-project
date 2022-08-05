@@ -5,11 +5,19 @@ export default class PlanPanel extends React.Component {
 
   render() {
 
-    const { itinerary, startDate } = this.props;
+    const { startDate, itinerary, handleNext, handlePrev, endDate } = this.context;
 
-    let tripDate = '';
-    if (itinerary.length !== 0) {
-      tripDate = itinerary[0].tripDate;
+    let prevButton = '';
+    let nextButton = '';
+    if (startDate !== endDate) {
+      prevButton = 'fas fa-caret-left left-arrow hidden';
+      nextButton = 'fas fa-caret-right right-arrow';
+    } else if (startDate === endDate) {
+      prevButton = 'fas fa-caret-left left-arrow';
+      nextButton = 'fas fa-caret-right right-arrow hidden';
+    } else {
+      prevButton = 'fas fa-caret-left left-arrow';
+      nextButton = 'fas fa-caret-right right-arrow';
     }
 
     const schedules = itinerary.map(schedule =>
@@ -27,7 +35,7 @@ export default class PlanPanel extends React.Component {
             {schedule.destination}
           </div>
           <div className="trash-container">
-            <i onClick={() => this.props.onHandleDelete(schedule.placeId)} className="fas fa-trash-alt"></i>
+            <i onClick={() => this.context.handleDelete(schedule.placeId)} className="fas fa-trash-alt"></i>
           </div>
         </div>
       </li>
@@ -37,28 +45,15 @@ export default class PlanPanel extends React.Component {
     return (
     <div className="panel">
       <div className="panel-header">
-        { startDate !== undefined &&
         <div className="travel-date">
           <div>
           {startDate}
           </div>
           <div className="arrow-container">
-            <span className="previous"><i className="fas fa-caret-left left-arrow"></i></span>
-            <span className="next"><i className="fas fa-caret-right right-arrow"></i></span>
+              <span className="previous"><i onClick={handlePrev} className={prevButton}></i></span>
+              <span className="next"><i onClick={handleNext} className={nextButton}></i></span>
           </div>
         </div>
-          }
-          { startDate === undefined &&
-            <div className="travel-date">
-              <div>
-              {tripDate}
-              </div>
-              <div className="arrow-container">
-                <span className="previous"><i className="fas fa-caret-left left-arrow"></i></span>
-                <span className="next"><i className="fas fa-caret-right right-arrow"></i></span>
-              </div>
-            </div>
-          }
         </div>
         <ul className="ul-padding">
           {schedules}
@@ -67,5 +62,4 @@ export default class PlanPanel extends React.Component {
     );
   }
 }
-
 PlanPanel.contextType = AppContext;
