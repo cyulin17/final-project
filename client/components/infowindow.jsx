@@ -1,4 +1,6 @@
 import React from 'react';
+import addOneHour from '../lib/add-one-hour';
+import AppContext from '../lib/app-context';
 
 export default class InfoWindow extends React.Component {
 
@@ -8,7 +10,6 @@ export default class InfoWindow extends React.Component {
       isClicked: false,
       button: false,
       schedule: [],
-      addDate: '',
       addTime: ''
     };
 
@@ -39,7 +40,7 @@ export default class InfoWindow extends React.Component {
     const addInfo = [];
     const destination = this.props.result.storeName;
     const photo = this.props.result.photo;
-    const tripDate = this.state.addDate;
+    const tripDate = this.props.tripDate;
     const tripStartTime = this.state.addTime;
     const tripEndTime = addOneHour(tripStartTime, 1);
 
@@ -66,7 +67,7 @@ export default class InfoWindow extends React.Component {
         this.setState({
           schedule: addInfo
         });
-        this.props.onAddItinerary(addInfo);
+        this.context.addItinerary(addInfo);
       }
       )
       .catch(error => {
@@ -105,10 +106,6 @@ export default class InfoWindow extends React.Component {
           <div onClick={this.handleClick} className='add'>Add to Itenerary</div>
           <div className={this.state.isClicked === true ? 'date-time' : 'hidden'}>
             <div>
-                <label htmlFor="add-date"></label>
-                <input type="date" name="addDate" id="addDate" value={this.state.addDate} onChange={this.handleInputChange}/>
-            </div>
-            <div>
                 <label htmlFor="add-time"></label>
                 <input type="time" name="addTime" id="addTime" value={this.state.addTime} onChange={this.handleInputChange}/>
             </div>
@@ -122,20 +119,4 @@ export default class InfoWindow extends React.Component {
 
 }
 
-function addOneHour(startTime, hour) {
-  const array = startTime.split(':');
-  let hours = parseInt(array[0]);
-  let minutes = parseInt(array[1]);
-
-  hours = hours + hour;
-
-  if (hours > 23) {
-    hours = hours - 24;
-  }
-
-  if (minutes < 10) {
-    minutes = '0' + minutes;
-  }
-
-  return `${hours < 10 ? '0' + hours : hours}:${minutes}`;
-}
+InfoWindow.contextType = AppContext;

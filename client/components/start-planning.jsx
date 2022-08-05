@@ -1,4 +1,6 @@
 import React from 'react';
+import currentDate from '../lib/get-currentdate';
+import nextDate from '../lib/get-nexday';
 import AppContext from '../lib/app-context';
 
 export default class Plan extends React.Component {
@@ -55,40 +57,6 @@ export default class Plan extends React.Component {
       </form>
     );
   }
-}
-
-function currentDate() {
-  const now = new Date();
-  const year = now.getFullYear();
-  let month = now.getMonth() + 1;
-  let day = now.getDate();
-
-  if (month < 10) {
-    month = '0' + month;
-  }
-
-  if (day < 10) {
-    day = '0' + day;
-  }
-
-  return `${year}-${month}-${day}`;
-}
-
-function nextDate() {
-
-  const nextDay = new Date(new Date().getTime() + 24 * 60 * 60 * 1000);
-  const year = nextDay.getFullYear();
-  let month = nextDay.getMonth() + 1;
-  let day = nextDay.getDate();
-
-  if (month < 10) {
-    month = '0' + month;
-  }
-
-  if (day < 10) {
-    day = '0' + day;
-  }
-  return `${year}-${month}-${day}`;
 }
 
 Plan.contextType = AppContext;
