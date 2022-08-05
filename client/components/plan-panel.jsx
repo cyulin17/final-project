@@ -5,14 +5,14 @@ export default class PlanPanel extends React.Component {
 
   render() {
 
-    const { startDate, itinerary, handleNext, handlePrev } = this.context;
+    const { startDate, itinerary, handleNext, handlePrev, endDate } = this.context;
 
     let prevButton = '';
     let nextButton = '';
-    if (startDate === this.context.date.startDate) {
+    if (startDate !== endDate) {
       prevButton = 'fas fa-caret-left left-arrow hidden';
       nextButton = 'fas fa-caret-right right-arrow';
-    } else if (startDate === this.context.date.nextDate) {
+    } else if (startDate === endDate) {
       prevButton = 'fas fa-caret-left left-arrow';
       nextButton = 'fas fa-caret-right right-arrow hidden';
     } else {

@@ -27,6 +27,7 @@ export default class App extends React.Component {
     this.handlePrev = this.handlePrev.bind(this);
     this.addItinerary = this.addItinerary.bind(this);
     this.handleDelete = this.handleDelete.bind(this);
+    this.setDate = this.setDate.bind(this);
   }
 
   componentDidMount() {
@@ -44,21 +45,66 @@ export default class App extends React.Component {
     const { user, token } = info;
     window.localStorage.setItem('token', token);
     this.setState({
-      user: user
+      user: user,
+      startDate: null,
+      endDate: null
     });
+    this.setDate();
   }
 
   signOut() {
     window.localStorage.removeItem('token');
-    this.setState({ user: null });
+    this.setState({ user: null, date: {} });
   }
 
   getDate(date) {
+
     this.setState({
-      date: date,
-      startDate: date.startDate,
-      endDate: date.nextDate
+      date: date
     });
+
+  }
+
+  setDate() {
+    const userToken = window.localStorage.getItem('token');
+
+    fetch('/api/places',
+      {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-Access-Token': userToken
+        }
+      })
+      .then(res => res.json())
+      .then(result => {
+        if (result.length !== 0) {
+          result.sort((a, b) => {
+            if (a.tripDate < b.tripDate) {
+              return -1;
+            }
+            if (a.tripDate > b.tripDate) {
+              return 1;
+            }
+            return 0;
+          }
+          );
+          this.setState({
+            startDate: result[0].tripDate,
+            endDate: result[result.length - 1].tripDate
+          });
+        } else {
+          this.setState({
+            startDate: this.state.date.startDate,
+            endDate: this.state.date.nextDate
+          });
+
+        }
+
+      })
+      .catch(error => {
+        console.error('Error:', error);
+      });
   }
 
   getUserItinerary() {
@@ -75,6 +121,7 @@ export default class App extends React.Component {
       })
       .then(res => res.json())
       .then(result => {
+
         result.forEach(itinerary => {
           if (itinerary.tripDate === this.state.startDate) {
             dateFilteredResult.push(itinerary);
@@ -82,6 +129,7 @@ export default class App extends React.Component {
           this.setState({
             itinerary: dateFilteredResult
           });
+
         });
 
       }
@@ -104,7 +152,7 @@ export default class App extends React.Component {
 
   handlePrev() {
     const currentDay = new Date(this.state.startDate);
-    if (this.state.startDate !== this.state.date.startDate) {
+    if (this.state.startDate === this.state.endDate) {
       this.setState({
         startDate: new Date(currentDay.setDate(currentDay.getDate() - 1)).toISOString().slice(0, 10)
       });
@@ -170,9 +218,10 @@ export default class App extends React.Component {
   }
 
   render() {
+
     if (this.state.isAuthorizing) return null;
     const { user, route, date, startDate, endDate, itinerary } = this.state;
-    const { signIn, signOut, getDate, getUserItinerary, handleNext, handlePrev, addItinerary, handleDelete } = this;
+    const { signIn, signOut, getDate, getUserItinerary, handleNext, handlePrev, addItinerary, handleDelete, setDate } = this;
     const contextValue = {
       user,
       route,
@@ -187,7 +236,8 @@ export default class App extends React.Component {
       handleNext,
       handlePrev,
       addItinerary,
-      handleDelete
+      handleDelete,
+      setDate
     };
     return (
     <AppContext.Provider value={contextValue}>

@@ -27,7 +27,6 @@ export default class Plan extends React.Component {
 
   handleSubmit(event) {
     event.preventDefault();
-
     if (!this.context.user) {
       window.location.hash = '#login';
       this.context.getDate(this.state);
@@ -38,7 +37,6 @@ export default class Plan extends React.Component {
   }
 
   render() {
-
     return (
       <form onSubmit={this.handleSubmit}>
         <div className="plan-container">
