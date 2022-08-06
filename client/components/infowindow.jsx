@@ -31,7 +31,6 @@ export default class InfoWindow extends React.Component {
     this.setState({
       [name]: value
     });
-
   }
 
   handleSubmit(event) {

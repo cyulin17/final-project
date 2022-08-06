@@ -90,11 +90,19 @@ export default class App extends React.Component {
           }
           );
           this.setState({
+            date: {
+              startDate: result[0].tripDate,
+              nextDate: result[result.length - 1].tripDate
+            },
             startDate: result[0].tripDate,
             endDate: result[result.length - 1].tripDate
           });
         } else {
           this.setState({
+            date: {
+              startDate: this.state.date.startDate,
+              nextDate: this.state.date.nextDate
+            },
             startDate: this.state.date.startDate,
             endDate: this.state.date.nextDate
           });
@@ -152,7 +160,7 @@ export default class App extends React.Component {
 
   handlePrev() {
     const currentDay = new Date(this.state.startDate);
-    if (this.state.startDate === this.state.endDate) {
+    if (this.state.startDate !== this.state.date.startDate) {
       this.setState({
         startDate: new Date(currentDay.setDate(currentDay.getDate() - 1)).toISOString().slice(0, 10)
       });
