@@ -64,7 +64,7 @@ export default class Login extends React.Component {
       <form onSubmit={this.handleSubmit}>
         <div className="container-fluid login-container">
           <span className="navbar-brand logo">
-            GotoJapan
+            <a href='#'>GotoJapan</a>
           </span>
         <div className="email">
         <label htmlFor="email"></label>

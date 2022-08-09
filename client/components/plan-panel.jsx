@@ -5,7 +5,7 @@ export default class PlanPanel extends React.Component {
 
   render() {
 
-    const { startDate, itinerary, handleNext, handlePrev } = this.context;
+    const { startDate, itinerary, onHandleNext, onHandlePrev } = this.props;
 
     let prevButton = '';
     let nextButton = '';
@@ -38,7 +38,7 @@ export default class PlanPanel extends React.Component {
             {schedule.destination}
           </div>
           <div className="trash-container">
-            <i onClick={() => this.context.handleDelete(schedule.placeId)} className="fas fa-trash-alt"></i>
+            <i onClick={() => this.props.onHandleDelete(schedule.placeId)} className="fas fa-trash-alt"></i>
           </div>
         </div>
       </li>
@@ -53,8 +53,8 @@ export default class PlanPanel extends React.Component {
           {startDate}
           </div>
           <div className="arrow-container">
-              <span className="previous"><i onClick={handlePrev} className={prevButton}></i></span>
-              <span className="next"><i onClick={handleNext} className={nextButton}></i></span>
+              <span className="previous"><i onClick={onHandlePrev} className={prevButton}></i></span>
+              <span className="next"><i onClick={onHandleNext} className={nextButton}></i></span>
           </div>
         </div>
         </div>

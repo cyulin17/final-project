@@ -66,7 +66,7 @@ export default class InfoWindow extends React.Component {
         this.setState({
           schedule: addInfo
         });
-        this.context.addItinerary(addInfo);
+        this.props.onAddItinerary(addInfo);
       }
       )
       .catch(error => {

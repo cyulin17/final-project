@@ -14,6 +14,11 @@ export default class Plan extends React.Component {
     };
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
+    this.handleDate = this.handleDate.bind(this);
+  }
+
+  componentDidMount() {
+    this.handleDate();
   }
 
   handleChange(event) {
@@ -25,11 +30,15 @@ export default class Plan extends React.Component {
     });
   }
 
+  handleDate() {
+    this.context.getDate(this.state);
+  }
+
   handleSubmit(event) {
     event.preventDefault();
+    this.handleDate();
     if (!this.context.user) {
       window.location.hash = '#login';
-      this.context.getDate(this.state);
     } else {
       window.location.hash = '#map';
     }

@@ -17,6 +17,9 @@ export default class MyMap extends React.Component {
       info: [],
       showInfo: false,
       isClosed: false,
+      startDate: null,
+      endDate: null,
+      itinerary: [],
       center: {
         lat: 38.19773060427947,
         lng: 137.638514642288
@@ -29,6 +32,12 @@ export default class MyMap extends React.Component {
     this.keywordSearch = this.keywordSearch.bind(this);
     this.handleInfowindow = this.handleInfowindow.bind(this);
     this.handleInfowindowClosed = this.handleInfowindowClosed.bind(this);
+    this.getUserItinerary = this.getUserItinerary.bind(this);
+    this.handleNext = this.handleNext.bind(this);
+    this.handlePrev = this.handlePrev.bind(this);
+    this.addItinerary = this.addItinerary.bind(this);
+    this.handleDelete = this.handleDelete.bind(this);
+    // this.setDate = this.setDate.bind(this);
 
   }
 
@@ -39,8 +48,56 @@ export default class MyMap extends React.Component {
     });
   }
 
+  // componentDidMount() {
+  //   this.getUserItinerary();
+  // }
+
   componentDidMount() {
-    this.context.getUserItinerary();
+    const userToken = window.localStorage.getItem('token');
+
+    fetch('/api/places',
+      {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-Access-Token': userToken
+        }
+      })
+      .then(res => res.json())
+      .then(result => {
+        if (result.length !== 0) {
+          result.sort((a, b) => {
+            if (a.tripDate < b.tripDate) {
+              return -1;
+            }
+            if (a.tripDate > b.tripDate) {
+              return 1;
+            }
+            return 0;
+          }
+          );
+          this.setState({
+            // date: {
+            //   startDate: result[0].tripDate,
+            //   nextDate: result[result.length - 1].tripDate
+            // },
+            startDate: result[0].tripDate,
+            endDate: result[result.length - 1].tripDate
+          });
+        } else {
+          this.setState({
+            // date: {
+            //   startDate: this.state.date.startDate,
+            //   nextDate: this.state.date.nextDate
+            // },
+            startDate: this.context.date.startDate,
+            endDate: this.context.date.nextDate
+          });
+        }
+      })
+      .catch(error => {
+        console.error('Error:', error);
+      });
   }
 
   areaSearch(query) {
@@ -173,11 +230,113 @@ export default class MyMap extends React.Component {
     this.setState({ showInfo: false });
   }
 
+  getUserItinerary() {
+    const userToken = window.localStorage.getItem('token');
+    const dateFilteredResult = [];
+
+    fetch('/api/places',
+      {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-Access-Token': userToken
+        }
+      })
+      .then(res => res.json())
+      .then(result => {
+
+        result.forEach(itinerary => {
+          if (itinerary.tripDate === this.state.startDate) {
+            dateFilteredResult.push(itinerary);
+          }
+          this.setState({
+            itinerary: dateFilteredResult
+          });
+
+        });
+
+      }
+      )
+      .catch(error => {
+        console.error('Error:', error);
+      });
+  }
+
+  handleNext() {
+
+    const firstDay = new Date(this.state.startDate);
+    if (this.state.startDate !== this.state.endDate) {
+      this.setState({
+        startDate: new Date(firstDay.setDate(firstDay.getDate() + 1)).toISOString().slice(0, 10)
+      });
+    }
+    this.getUserItinerary();
+  }
+
+  handlePrev() {
+    const currentDay = new Date(this.state.startDate);
+    if (this.state.startDate !== this.context.date.startDate) {
+      this.setState({
+        startDate: new Date(currentDay.setDate(currentDay.getDate() - 1)).toISOString().slice(0, 10)
+      });
+    }
+    this.getUserItinerary();
+  }
+
+  addItinerary(addInfo) {
+
+    this.setState({
+      itinerary: this.state.itinerary.concat(addInfo).sort((a, b) => {
+        if (a.tripStartTime < b.tripStartTime) {
+          return -1;
+        }
+        if (a.tripStartTime > b.tripStartTime) {
+          return 1;
+        }
+        return 0;
+      }
+      )
+    });
+  }
+
+  handleDelete(placeId) {
+
+    const userToken = window.localStorage.getItem('token');
+
+    const newItineraryArray = [...this.state.itinerary];
+    const deleteItemIndex = newItineraryArray.findIndex(scheduleObject => scheduleObject.placeId === placeId);
+    newItineraryArray.splice(deleteItemIndex, 1);
+
+    fetch(`/api/places/${placeId}`,
+      {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-Access-Token': userToken
+        }
+      })
+      .then(res => {
+        if (res.length !== 0) {
+          this.setState({
+            itinerary: newItineraryArray
+          });
+        } else {
+          this.setState({
+            startDate: res[0].tripDate
+          });
+        }
+
+      })
+      .catch(error => {
+        console.error('Error:', error);
+      });
+
+  }
+
   render() {
 
-    const { places, info } = this.state;
-    const { startDate } = this.context;
-
+    const { places, info, startDate } = this.state;
+    // const { startDate } = this.context;
     return (
       <div>
         <Search onAreaSearch={this.areaSearch} onCategorySearch={this.categorySearch} onKeywordSearch={this.keywordSearch}/>
@@ -214,7 +373,12 @@ export default class MyMap extends React.Component {
 
           </GoogleMapReact>
          </div>
-        <PlanPanel />
+        <PlanPanel
+        onHandleNext={this.handleNext}
+        onHandlePrev={this.handlePrev}
+        onHandleDelete={this.handleDelete}
+        itinerary={this.state.itinerary}
+        startDate={startDate}/>
       </div>
 
     );
