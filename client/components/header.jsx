@@ -12,7 +12,7 @@ export default class Header extends React.Component {
             <a className="navbar-brand logo" href="#">
               GotoJapan
             </a>
-            {user === null &&
+            { user === null &&
             <ul className="nav justify-content-end">
               <li className="nav-item">
                 <a className="nav-link sign-up" href="#signup">Sign Up</a>

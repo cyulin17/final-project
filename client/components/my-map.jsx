@@ -18,6 +18,7 @@ export default class MyMap extends React.Component {
       showInfo: false,
       isClosed: false,
       startDate: null,
+      currentDate: null,
       endDate: null,
       itinerary: [],
       center: {
@@ -37,7 +38,6 @@ export default class MyMap extends React.Component {
     this.handlePrev = this.handlePrev.bind(this);
     this.addItinerary = this.addItinerary.bind(this);
     this.handleDelete = this.handleDelete.bind(this);
-    // this.setDate = this.setDate.bind(this);
 
   }
 
@@ -48,12 +48,9 @@ export default class MyMap extends React.Component {
     });
   }
 
-  // componentDidMount() {
-  //   this.getUserItinerary();
-  // }
-
   componentDidMount() {
     const userToken = window.localStorage.getItem('token');
+    const dateFilteredResult = [];
 
     fetch('/api/places',
       {
@@ -77,23 +74,26 @@ export default class MyMap extends React.Component {
           }
           );
           this.setState({
-            // date: {
-            //   startDate: result[0].tripDate,
-            //   nextDate: result[result.length - 1].tripDate
-            // },
             startDate: result[0].tripDate,
+            currentDate: result[0].tripDate,
             endDate: result[result.length - 1].tripDate
+          });
+          result.forEach(itinerary => {
+            if (itinerary.tripDate === this.state.currentDate) {
+              dateFilteredResult.push(itinerary);
+            }
+            this.setState({
+              itinerary: dateFilteredResult
+            });
           });
         } else {
           this.setState({
-            // date: {
-            //   startDate: this.state.date.startDate,
-            //   nextDate: this.state.date.nextDate
-            // },
             startDate: this.context.date.startDate,
+            currentDate: this.context.date.startDate,
             endDate: this.context.date.nextDate
           });
         }
+
       })
       .catch(error => {
         console.error('Error:', error);
@@ -244,17 +244,14 @@ export default class MyMap extends React.Component {
       })
       .then(res => res.json())
       .then(result => {
-
         result.forEach(itinerary => {
-          if (itinerary.tripDate === this.state.startDate) {
+          if (itinerary.tripDate === this.state.currentDate) {
             dateFilteredResult.push(itinerary);
           }
           this.setState({
             itinerary: dateFilteredResult
           });
-
         });
-
       }
       )
       .catch(error => {
@@ -264,20 +261,20 @@ export default class MyMap extends React.Component {
 
   handleNext() {
 
-    const firstDay = new Date(this.state.startDate);
-    if (this.state.startDate !== this.state.endDate) {
+    const firstDay = new Date(this.state.currentDate);
+    if (this.state.currentDate !== this.state.endDate) {
       this.setState({
-        startDate: new Date(firstDay.setDate(firstDay.getDate() + 1)).toISOString().slice(0, 10)
+        currentDate: new Date(firstDay.setDate(firstDay.getDate() + 1)).toISOString().slice(0, 10)
       });
     }
     this.getUserItinerary();
   }
 
   handlePrev() {
-    const currentDay = new Date(this.state.startDate);
-    if (this.state.startDate !== this.context.date.startDate) {
+    const currentDay = new Date(this.state.currentDate);
+    if (this.state.currentDate === this.state.endDate) {
       this.setState({
-        startDate: new Date(currentDay.setDate(currentDay.getDate() - 1)).toISOString().slice(0, 10)
+        currentDate: new Date(currentDay.setDate(currentDay.getDate() - 1)).toISOString().slice(0, 10)
       });
     }
     this.getUserItinerary();
@@ -322,7 +319,7 @@ export default class MyMap extends React.Component {
           });
         } else {
           this.setState({
-            startDate: res[0].tripDate
+            currentDate: res[0].tripDate
           });
         }
 
@@ -335,8 +332,7 @@ export default class MyMap extends React.Component {
 
   render() {
 
-    const { places, info, startDate } = this.state;
-    // const { startDate } = this.context;
+    const { places, info, currentDate, endDate, startDate, itinerary } = this.state;
     return (
       <div>
         <Search onAreaSearch={this.areaSearch} onCategorySearch={this.categorySearch} onKeywordSearch={this.keywordSearch}/>
@@ -348,7 +344,7 @@ export default class MyMap extends React.Component {
               result={result}
               handleInfowindowClosed={this.handleInfowindowClosed}
               onAddItinerary={this.addItinerary}
-              tripDate={startDate}
+              tripDate={currentDate}
             />
           ))}
         <GoogleMapReact
@@ -377,8 +373,10 @@ export default class MyMap extends React.Component {
         onHandleNext={this.handleNext}
         onHandlePrev={this.handlePrev}
         onHandleDelete={this.handleDelete}
-        itinerary={this.state.itinerary}
-        startDate={startDate}/>
+        itinerary={itinerary}
+        startDate={startDate}
+        currentDate={currentDate}
+        endDate={endDate}/>
       </div>
 
     );

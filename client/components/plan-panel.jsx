@@ -5,17 +5,21 @@ export default class PlanPanel extends React.Component {
 
   render() {
 
-    const { startDate, itinerary, onHandleNext, onHandlePrev } = this.props;
+    const { startDate, currentDate, endDate, itinerary, onHandleNext, onHandlePrev } = this.props;
+
+    const startTripDate = new Date(startDate).getTime();
+    const currentTripDate = new Date(currentDate).getTime();
+    const endTripDate = new Date(endDate).getTime();
 
     let prevButton = '';
     let nextButton = '';
-    if (startDate === this.context.date.startDate && startDate === this.context.date.nextDate) {
+    if (currentTripDate === endTripDate && currentTripDate === startTripDate) {
       prevButton = 'fas fa-caret-left left-arrow hidden';
       nextButton = 'fas fa-caret-right right-arrow hidden';
-    } else if (startDate === this.context.date.startDate) {
+    } else if (currentTripDate < endTripDate && currentTripDate === startTripDate) {
       prevButton = 'fas fa-caret-left left-arrow hidden';
       nextButton = 'fas fa-caret-right right-arrow';
-    } else if (startDate === this.context.date.nextDate) {
+    } else if (currentTripDate === endTripDate && currentTripDate > startTripDate) {
       prevButton = 'fas fa-caret-left left-arrow';
       nextButton = 'fas fa-caret-right right-arrow hidden';
     } else {
@@ -50,7 +54,7 @@ export default class PlanPanel extends React.Component {
       <div className="panel-header">
         <div className="travel-date">
           <div>
-          {startDate}
+          {currentDate}
           </div>
           <div className="arrow-container">
               <span className="previous"><i onClick={onHandlePrev} className={prevButton}></i></span>

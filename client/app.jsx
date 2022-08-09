@@ -16,20 +16,10 @@ export default class App extends React.Component {
       user: null,
       isAuthorizing: true,
       date: {}
-      // headerDate: null,
-      // startDate: null,
-      // endDate: null,
-      // itinerary: []
     };
     this.signIn = this.signIn.bind(this);
     this.signOut = this.signOut.bind(this);
     this.getDate = this.getDate.bind(this);
-    // this.getUserItinerary = this.getUserItinerary.bind(this);
-    // this.handleNext = this.handleNext.bind(this);
-    // this.handlePrev = this.handlePrev.bind(this);
-    // this.addItinerary = this.addItinerary.bind(this);
-    // this.handleDelete = this.handleDelete.bind(this);
-    // this.setDate = this.setDate.bind(this);
   }
 
   componentDidMount() {
@@ -48,10 +38,7 @@ export default class App extends React.Component {
     window.localStorage.setItem('token', token);
     this.setState({
       user: user
-      // startDate: null,
-      // endDate: null
     });
-    // this.setDate();
   }
 
   signOut() {
@@ -85,8 +72,6 @@ export default class App extends React.Component {
   }
 
   render() {
-    // console.log(this.state);
-
     if (this.state.isAuthorizing) return null;
     const { user, route, date, startDate, endDate, itinerary } = this.state;
     const { signIn, signOut, getDate, getUserItinerary, handleNext, handlePrev, addItinerary, handleDelete, setDate } = this;
