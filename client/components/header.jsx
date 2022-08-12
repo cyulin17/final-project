@@ -37,7 +37,6 @@ export default class Header extends React.Component {
       </header>
     );
   }
-
 }
 
 Header.contextType = AppContext;

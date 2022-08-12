@@ -111,7 +111,6 @@ app.post('/api/places', (req, res, next) => {
     .then(result => {
       const [itinerary] = result.rows;
       res.status(201).json(itinerary);
-      // console.log(result);
     });
 });
 
@@ -162,6 +161,28 @@ app.delete('/api/places/:placeId', (req, res, next) => {
     })
     .catch(err => next(err));
 
+});
+
+app.post('/api/dates', (req, res, next) => {
+  const { userId } = req.user;
+  const { tripStartDate, tripEndDate } = req.body;
+
+  const sql = `
+  insert into "dates" ("userId", "tripStartDate", "tripEndDate")
+  values ($1, $2, $3)
+  returning
+    "tripId",
+    "userId",
+    to_char("tripStartDate", 'YYYY-MM-DD') as "tripStartDate",
+    to_char("tripEndDate", 'YYYY-MM-DD') as "tripEndDate"
+`;
+  const params = [userId, tripStartDate, tripEndDate];
+
+  db.query(sql, params)
+    .then(result => {
+      const [trip] = result.rows;
+      res.status(201).json(trip);
+    });
 });
 
 app.use(errorMiddleware);

@@ -17,9 +17,9 @@ export default class Plan extends React.Component {
     this.handleDate = this.handleDate.bind(this);
   }
 
-  componentDidMount() {
-    this.handleDate();
-  }
+  // componentDidMount() {
+  //   this.handleDate();
+  // }
 
   handleChange(event) {
 
@@ -32,14 +32,30 @@ export default class Plan extends React.Component {
 
   handleDate() {
     this.context.getDate(this.state);
+    // this.context.saveTripDate(this.state);
   }
 
   handleSubmit(event) {
     event.preventDefault();
-    this.handleDate();
+
+    // if (!this.context.user) {
+    //   window.location.hash = '#login';
+    // } else {
+    //   const { startDate, nextDate } = this.state;
+    //   const searchParams = new URLSearchParams({ startDate, nextDate });
+    //   const newHash = `#map?${searchParams}`;
+    //   window.location.hash = newHash;
+    // }
+    // const { startDate, nextDate } = this.state;
+    // const searchParams = new URLSearchParams({ startDate, nextDate });
+    // const newHash = `#map?${searchParams}`;
+    // const
+
+    // this.handleDate();
     if (!this.context.user) {
       window.location.hash = '#login';
     } else {
+      this.handleDate();
       window.location.hash = '#map';
     }
 

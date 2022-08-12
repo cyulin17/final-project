@@ -38,6 +38,8 @@ export default class MyMap extends React.Component {
     this.handlePrev = this.handlePrev.bind(this);
     this.addItinerary = this.addItinerary.bind(this);
     this.handleDelete = this.handleDelete.bind(this);
+    this.setDate = this.setDate.bind(this);
+    // this.saveTripDate = this.saveTripDate.bind(this);
 
   }
 
@@ -49,56 +51,113 @@ export default class MyMap extends React.Component {
   }
 
   componentDidMount() {
-    const userToken = window.localStorage.getItem('token');
-    const dateFilteredResult = [];
-
-    fetch('/api/places',
-      {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-          'X-Access-Token': userToken
-        }
-      })
-      .then(res => res.json())
-      .then(result => {
-        if (result.length !== 0) {
-          result.sort((a, b) => {
-            if (a.tripDate < b.tripDate) {
-              return -1;
-            }
-            if (a.tripDate > b.tripDate) {
-              return 1;
-            }
-            return 0;
-          }
-          );
-          this.setState({
-            startDate: result[0].tripDate,
-            currentDate: result[0].tripDate,
-            endDate: result[result.length - 1].tripDate
-          });
-          result.forEach(itinerary => {
-            if (itinerary.tripDate === this.state.currentDate) {
-              dateFilteredResult.push(itinerary);
-            }
-            this.setState({
-              itinerary: dateFilteredResult
-            });
-          });
-        } else {
-          this.setState({
-            startDate: this.context.date.startDate,
-            currentDate: this.context.date.startDate,
-            endDate: this.context.date.nextDate
-          });
-        }
-
-      })
-      .catch(error => {
-        console.error('Error:', error);
-      });
+    this.setDate();
   }
+
+  setDate() {
+    const tripStartDate = this.context.tripStartDate;
+    const tripEndDate = this.context.tripEndDate;
+
+    this.setState({
+      startDate: '123',
+      currentDate: tripStartDate,
+      endDate: tripEndDate
+    });
+  }
+
+  // saveTripDate() {
+
+  //   const userToken = window.localStorage.getItem('token');
+  //   // const tripStartDate = this.props.startDate;
+  //   // const tripEndDate = this.props.nextDate;
+
+  //   const tripStartDate = this.context.date.startDate;
+  //   const tripEndDate = this.context.date.nextDate;
+
+  //   fetch('/api/dates',
+  //     {
+  //       method: 'POST',
+  //       headers: {
+  //         'Content-Type': 'application/json',
+  //         'X-Access-Token': userToken
+  //       },
+  //       body: JSON.stringify({
+  //         tripStartDate,
+  //         tripEndDate
+  //       })
+  //     })
+  //     .then(res => res.json())
+  //     .then(result => {
+  //       this.setState({
+  //         startDate: result.tripStartDate,
+  //         currentDate: result.tripStartDate,
+  //         endDate: result.tripEndDate
+  //       });
+  //     })
+  //     .catch(error => {
+  //       console.error('Error:', error);
+  //     });
+  // }
+
+  // setDate() {
+  //   const userToken = window.localStorage.getItem('token');
+  //   const dateFilteredResult = [];
+
+  //   fetch('/api/places',
+  //     {
+  //       method: 'GET',
+  //       headers: {
+  //         'Content-Type': 'application/json',
+  //         'X-Access-Token': userToken
+  //       }
+  //     })
+  //     .then(res => res.json())
+  //     .then(result => {
+  //       if (result.length !== 0) {
+  //         result.sort((a, b) => {
+  //           if (a.tripDate < b.tripDate) {
+  //             return -1;
+  //           }
+  //           if (a.tripDate > b.tripDate) {
+  //             return 1;
+  //           }
+  //           return 0;
+  //         }
+  //         );
+  //         if (result[0].tripDate !== this.context.date.startDate && result[result.length - 1].tripDate !== this.context.date.nextDate) {
+  //           this.setState({
+  //             startDate: result[0].tripDate,
+  //             currentDate: result[0].tripDate,
+  //             endDate: this.context.date.nextDate
+  //           });
+  //         } else {
+  //           this.setState({
+  //             startDate: result[0].tripDate,
+  //             currentDate: result[0].tripDate,
+  //             endDate: result[result.length - 1].tripDate
+  //           });
+  //         }
+  //         result.forEach(itinerary => {
+  //           if (itinerary.tripDate === this.state.currentDate) {
+  //             dateFilteredResult.push(itinerary);
+  //           }
+  //           this.setState({
+  //             itinerary: dateFilteredResult
+  //           });
+  //         });
+  //       } else {
+  //         this.setState({
+  //           startDate: this.context.date.startDate,
+  //           currentDate: this.context.date.startDate,
+  //           endDate: this.context.date.nextDate
+  //         });
+  //       }
+
+  //     })
+  //     .catch(error => {
+  //       console.error('Error:', error);
+  //     });
+  // }
 
   areaSearch(query) {
 
@@ -272,7 +331,7 @@ export default class MyMap extends React.Component {
 
   handlePrev() {
     const currentDay = new Date(this.state.currentDate);
-    if (this.state.currentDate === this.state.endDate) {
+    if (this.state.currentDate !== this.context.date.startDate) {
       this.setState({
         currentDate: new Date(currentDay.setDate(currentDay.getDate() - 1)).toISOString().slice(0, 10)
       });

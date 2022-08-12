@@ -32,10 +32,7 @@ export default class Login extends React.Component {
         headers: {
           'Content-Type': 'application/json'
         },
-        body: JSON.stringify({
-          email: this.state.email,
-          password: this.state.password
-        })
+        body: JSON.stringify(this.state)
       })
       .then(res => {
         if (!res.ok) {
@@ -49,7 +46,7 @@ export default class Login extends React.Component {
         if (info.token && info.user) {
           this.props.onSignIn(info);
         }
-        window.location.hash = '#map';
+        window.location.hash = '#';
         alert('Login successfully!');
       }
       )
