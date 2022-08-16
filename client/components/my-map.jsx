@@ -50,7 +50,6 @@ export default class MyMap extends React.Component {
   }
 
   componentDidMount() {
-    window.localStorage.getItem('tripId');
     this.setDate();
     this.getUserItinerary();
   }
