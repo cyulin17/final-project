@@ -31,5 +31,16 @@ CREATE TABLE "places" (
 ) WITH (
   OIDS=FALSE
 );
+CREATE TABLE "dates" (
+  "tripId" serial NOT NULL,
+  "tripStartDate" DATE NOT NULL,
+  "tripEndDate" DATE NOT NULL,
+  "userId" integer NOT NULL,
+  CONSTRAINT "dates_pk" PRIMARY KEY ("tripId")
+) WITH (
+  OIDS=FALSE
+);
 
 ALTER TABLE "places" ADD CONSTRAINT "places_fk0" FOREIGN KEY ("userId") REFERENCES "users"("userId");
+
+ALTER TABLE "dates" ADD CONSTRAINT "dates_fk0" FOREIGN KEY ("userId") REFERENCES "users"("userId");

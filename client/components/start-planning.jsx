@@ -8,8 +8,8 @@ export default class Plan extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      startDate: currentDate(),
-      nextDate: nextDate()
+      tripStartDate: currentDate(),
+      tripEndDate: nextDate()
 
     };
     this.handleChange = this.handleChange.bind(this);
@@ -17,7 +17,6 @@ export default class Plan extends React.Component {
   }
 
   handleChange(event) {
-
     const value = event.target.value;
     const name = event.target.name;
     this.setState({
@@ -27,13 +26,43 @@ export default class Plan extends React.Component {
 
   handleSubmit(event) {
     event.preventDefault();
-    if (!this.context.user) {
-      window.location.hash = '#login';
-      this.context.getDate(this.state);
-    } else {
-      window.location.hash = '#map';
-    }
 
+    const tripId = window.localStorage.getItem('tripId');
+    const startDate = this.state.tripStartDate;
+    const EndDate = this.state.tripEndDate;
+    const tripStartDate = new Date(startDate).getTime();
+    const tripEndDate = new Date(EndDate).getTime();
+
+    if (tripStartDate > tripEndDate) {
+      alert('Trip Dates are not valid.');
+    } else {
+      if (!this.context.user) {
+        window.location.hash = '#login';
+      } else if (this.context.user && !tripId) {
+
+        const userToken = window.localStorage.getItem('token');
+
+        fetch('/api/dates',
+          {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'X-Access-Token': userToken
+            },
+            body: JSON.stringify(this.state)
+          })
+          .then(res => res.json())
+          .then(date => {
+            this.context.getDate(date);
+          })
+          .catch(error => {
+            console.error('Error:', error);
+          });
+        window.location.hash = '#map';
+      } else if (this.context.user && tripId) {
+        alert('You have an existing travel plan, please go to My Trips.');
+      }
+    }
   }
 
   render() {
@@ -41,12 +70,12 @@ export default class Plan extends React.Component {
       <form onSubmit={this.handleSubmit}>
         <div className="plan-container">
         <div className="calendar-container">
-            <label htmlFor="startDate">Travel Date From</label>
-            <input type="date" name="startDate" id="startDate" value={this.state.startDate} onChange={this.handleChange}/>
+            <label htmlFor="tripStartDate">Travel Date From</label>
+            <input type="date" name="tripStartDate" id="tripStartDate" value={this.state.tripStartDate} onChange={this.handleChange}/>
         </div>
         <div>
-            <label htmlFor="nextDate">To</label>
-            <input type="date" name="nextDate" id="nextDate" value={this.state.nextDate} onChange={this.handleChange} />
+            <label htmlFor="tripEndDate">To</label>
+            <input type="date" name="tripEndDate" id="tripEndDate" value={this.state.tripEndDate} onChange={this.handleChange} />
         </div>
         <div>
             <button className="plan-button" type="submit">PLAN</button>

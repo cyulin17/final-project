@@ -20,18 +20,28 @@ body {
   font-size: 25px;
   font-weight: 600;
   padding-left: 0.5rem;
+}
+
+.logo a {
   color: rgb(0 0 0);
 }
 
 .sign-up,
 .log-in,
-.log-out {
+.log-out,
+.my-trips {
   color: rgb(0 0 0);
+}
+
+.log-out-end {
+  position: absolute;
+  right: 0;
 }
 
 .sign-up:hover,
 .log-in:hover,
-.log-out:hover {
+.log-out:hover,
+.my-trips:hover {
   color: #eb034f;
   font-weight: 600;
 }
@@ -80,7 +90,7 @@ body {
   padding-left: 5px;
 }
 
-input[name="startDate"] {
+input[name="tripStartDate"] {
   height: 50px;
   width: 200px;
   border: none;
@@ -90,7 +100,7 @@ input[name="startDate"] {
   font-size: 1.3rem;
 }
 
-input[name="nextDate"] {
+input[name="tripEndDate"] {
   height: 50px;
   width: 200px;
   border: none;
@@ -113,12 +123,22 @@ label {
 }
 
 .calender-container {
-  display: relative;
+  position: relative;
 }
 
 .login-container {
   width: 430px;
   height: 425px;
+  border: 1px solid #7e7e7e;
+  border-radius: 5px;
+  margin: 150px auto;
+  padding: 35px 18px;
+  text-align: center;
+}
+
+.signup-container {
+  width: 430px;
+  height: 500px;
   border: 1px solid #7e7e7e;
   border-radius: 5px;
   margin: 150px auto;
@@ -149,7 +169,8 @@ input[type="password"] {
   background-color: #db0049;
 }
 
-input::placeholder {
+input::placeholder,
+.signup label {
   color: #b0b0b0;
 }
 
@@ -170,6 +191,10 @@ input::placeholder {
   border-left: none;
   margin: 35px auto;
   margin-bottom: 5px;
+}
+
+.signup {
+  padding: 9px 0;
 }
 
 .user {

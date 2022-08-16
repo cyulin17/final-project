@@ -1,18 +1,24 @@
 import React from 'react';
-import AppContext from '../lib/app-context';
 
 export default class PlanPanel extends React.Component {
 
   render() {
 
-    const { startDate, itinerary, handleNext, handlePrev, endDate } = this.context;
+    const { startDate, currentDate, endDate, itinerary, onHandleNext, onHandlePrev } = this.props;
+
+    const startTripDate = new Date(startDate).getTime();
+    const currentTripDate = new Date(currentDate).getTime();
+    const endTripDate = new Date(endDate).getTime();
 
     let prevButton = '';
     let nextButton = '';
-    if (startDate !== endDate) {
+    if (currentTripDate === endTripDate && currentTripDate === startTripDate) {
+      prevButton = 'fas fa-caret-left left-arrow hidden';
+      nextButton = 'fas fa-caret-right right-arrow hidden';
+    } else if (currentTripDate < endTripDate && currentTripDate === startTripDate) {
       prevButton = 'fas fa-caret-left left-arrow hidden';
       nextButton = 'fas fa-caret-right right-arrow';
-    } else if (startDate === endDate) {
+    } else if (currentTripDate === endTripDate && currentTripDate > startTripDate) {
       prevButton = 'fas fa-caret-left left-arrow';
       nextButton = 'fas fa-caret-right right-arrow hidden';
     } else {
@@ -35,7 +41,7 @@ export default class PlanPanel extends React.Component {
             {schedule.destination}
           </div>
           <div className="trash-container">
-            <i onClick={() => this.context.handleDelete(schedule.placeId)} className="fas fa-trash-alt"></i>
+            <i onClick={() => this.props.onHandleDelete(schedule.placeId)} className="fas fa-trash-alt"></i>
           </div>
         </div>
       </li>
@@ -47,11 +53,11 @@ export default class PlanPanel extends React.Component {
       <div className="panel-header">
         <div className="travel-date">
           <div>
-          {startDate}
+          {currentDate}
           </div>
           <div className="arrow-container">
-              <span className="previous"><i onClick={handlePrev} className={prevButton}></i></span>
-              <span className="next"><i onClick={handleNext} className={nextButton}></i></span>
+              <span className="previous"><i onClick={onHandlePrev} className={prevButton}></i></span>
+              <span className="next"><i onClick={onHandleNext} className={nextButton}></i></span>
           </div>
         </div>
         </div>
@@ -62,4 +68,3 @@ export default class PlanPanel extends React.Component {
     );
   }
 }
-PlanPanel.contextType = AppContext;

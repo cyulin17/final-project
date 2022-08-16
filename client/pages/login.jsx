@@ -1,6 +1,4 @@
 import React from 'react';
-import AppContext from '../lib/app-context';
-
 export default class Login extends React.Component {
 
   constructor(props) {
@@ -32,10 +30,7 @@ export default class Login extends React.Component {
         headers: {
           'Content-Type': 'application/json'
         },
-        body: JSON.stringify({
-          email: this.state.email,
-          password: this.state.password
-        })
+        body: JSON.stringify(this.state)
       })
       .then(res => {
         if (!res.ok) {
@@ -49,8 +44,8 @@ export default class Login extends React.Component {
         if (info.token && info.user) {
           this.props.onSignIn(info);
         }
-        window.location.hash = '#map';
-        alert('Login successfully!');
+        window.location.hash = '#';
+        alert('Login successful!');
       }
       )
       .catch(error => {
@@ -64,7 +59,7 @@ export default class Login extends React.Component {
       <form onSubmit={this.handleSubmit}>
         <div className="container-fluid login-container">
           <span className="navbar-brand logo">
-            GotoJapan
+            <a href='#'>GotoJapan</a>
           </span>
         <div className="email">
         <label htmlFor="email"></label>
@@ -84,4 +79,3 @@ export default class Login extends React.Component {
     );
   }
 }
-Login.contextType = AppContext;

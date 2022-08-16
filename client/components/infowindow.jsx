@@ -1,6 +1,5 @@
 import React from 'react';
 import addOneHour from '../lib/add-one-hour';
-import AppContext from '../lib/app-context';
 
 export default class InfoWindow extends React.Component {
 
@@ -31,7 +30,6 @@ export default class InfoWindow extends React.Component {
     this.setState({
       [name]: value
     });
-
   }
 
   handleSubmit(event) {
@@ -61,15 +59,22 @@ export default class InfoWindow extends React.Component {
           photo
         })
       })
-      .then(res => res.json())
+      .then(res => {
+        if (!res.ok) {
+          alert('Please enter a time.');
+        } else {
+          return res.json();
+        }
+      })
       .then(result => {
-        addInfo.push(result);
-        this.setState({
-          schedule: addInfo
-        });
-        this.context.addItinerary(addInfo);
-      }
-      )
+        if (result) {
+          addInfo.push(result);
+          this.setState({
+            schedule: addInfo
+          });
+          this.props.onAddItinerary(addInfo);
+        }
+      })
       .catch(error => {
         console.error('Error:', error);
       });
@@ -118,5 +123,3 @@ export default class InfoWindow extends React.Component {
   }
 
 }
-
-InfoWindow.contextType = AppContext;
