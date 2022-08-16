@@ -182,9 +182,8 @@ export default class Search extends React.Component {
             </div>
           </div>
           </form>
-          <a onClick={signOut} className="nav-link log-out" href="#">Log Out</a>
+          <a onClick={signOut} className="nav-link log-out log-out-end" href="#">Log Out</a>
         </div>
-
       </nav>
     );
   }

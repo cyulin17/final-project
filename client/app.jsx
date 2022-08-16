@@ -16,12 +16,12 @@ export default class App extends React.Component {
       user: null,
       isAuthorizing: true,
       tripStartDate: null,
-      tripEndDate: null
+      tripEndDate: null,
+      tripId: null
     };
     this.signIn = this.signIn.bind(this);
     this.signOut = this.signOut.bind(this);
     this.getDate = this.getDate.bind(this);
-    // this.saveTripDate = this.saveTripDate.bind(this)
   }
 
   componentDidMount() {
@@ -49,39 +49,18 @@ export default class App extends React.Component {
   }
 
   getDate(date) {
+    const tripStartDate = date.tripStartDate;
+    const tripEndDate = date.tripEndDate;
+    const tripId = date.tripId;
 
-    const userToken = window.localStorage.getItem('token');
-    // const tripStartDate = this.props.startDate;
-    // const tripEndDate = this.props.nextDate;
+    this.setState({
+      tripStartDate: tripStartDate,
+      tripEndDate: tripEndDate,
+      tripId: tripId
+    });
 
-    const tripStartDate = date.startDate;
-    const tripEndDate = date.nextDate;
-
-    fetch('/api/dates',
-      {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'X-Access-Token': userToken
-        },
-        body: JSON.stringify({
-          tripStartDate,
-          tripEndDate
-        })
-      })
-      .then(res => res.json())
-      .then(date => {
-        const tripStartDate = date.tripStartDate;
-        const tripEndDate = date.tripEndDate;
-        this.setState({
-          tripStartDate: tripStartDate,
-          tripEndDate: tripEndDate
-        });
-      })
-      .catch(error => {
-        console.error('Error:', error);
-      });
-
+    const setTripId = this.state.tripId;
+    window.localStorage.setItem('tripId', setTripId);
   }
 
   renderPage() {
@@ -96,8 +75,6 @@ export default class App extends React.Component {
       return <SignUp />;
     }
     if (route.path === 'map') {
-      // const startDate = route.params.get('startDate');
-      // const nextDate = route.params.get('nextDate');
       return <MyMap />;
     }
 
@@ -105,24 +82,17 @@ export default class App extends React.Component {
 
   render() {
     if (this.state.isAuthorizing) return null;
-    const { user, route, tripStartDate, tripEndDate, itinerary } = this.state;
-    const { signIn, signOut, getDate, getUserItinerary, handleNext, handlePrev, addItinerary, handleDelete } = this;
+    const { user, route, tripStartDate, tripEndDate, tripId } = this.state;
+    const { signIn, signOut, getDate } = this;
     const contextValue = {
       user,
       route,
       tripStartDate,
       tripEndDate,
-      // startDate,
-      // endDate,
-      itinerary,
+      tripId,
       signIn,
       signOut,
-      getDate,
-      getUserItinerary,
-      handleNext,
-      handlePrev,
-      addItinerary,
-      handleDelete
+      getDate
     };
     return (
     <AppContext.Provider value={contextValue}>

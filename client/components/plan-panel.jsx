@@ -1,5 +1,4 @@
 import React from 'react';
-import AppContext from '../lib/app-context';
 
 export default class PlanPanel extends React.Component {
 
@@ -69,4 +68,3 @@ export default class PlanPanel extends React.Component {
     );
   }
 }
-PlanPanel.contextType = AppContext;

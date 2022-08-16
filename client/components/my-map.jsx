@@ -17,9 +17,9 @@ export default class MyMap extends React.Component {
       info: [],
       showInfo: false,
       isClosed: false,
-      startDate: null,
+      tripStartDate: null,
       currentDate: null,
-      endDate: null,
+      tripEndDate: null,
       itinerary: [],
       center: {
         lat: 38.19773060427947,
@@ -39,7 +39,6 @@ export default class MyMap extends React.Component {
     this.addItinerary = this.addItinerary.bind(this);
     this.handleDelete = this.handleDelete.bind(this);
     this.setDate = this.setDate.bind(this);
-    // this.saveTripDate = this.saveTripDate.bind(this);
 
   }
 
@@ -51,113 +50,37 @@ export default class MyMap extends React.Component {
   }
 
   componentDidMount() {
+    window.localStorage.getItem('tripId');
     this.setDate();
+    this.getUserItinerary();
   }
 
   setDate() {
-    const tripStartDate = this.context.tripStartDate;
-    const tripEndDate = this.context.tripEndDate;
+    const userToken = window.localStorage.getItem('token');
+    const getTripId = window.localStorage.getItem('tripId');
 
-    this.setState({
-      startDate: '123',
-      currentDate: tripStartDate,
-      endDate: tripEndDate
-    });
+    fetch(`/api/dates/${getTripId}`,
+      {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-Access-Token': userToken
+        }
+      })
+      .then(res => res.json())
+      .then(result => {
+        const tripStartDate = result[0].tripStartDate;
+        const tripEndDate = result[0].tripEndDate;
+        this.setState({
+          tripStartDate: tripStartDate,
+          currentDate: tripStartDate,
+          tripEndDate: tripEndDate
+        });
+      })
+      .catch(error => {
+        console.error('Error:', error);
+      });
   }
-
-  // saveTripDate() {
-
-  //   const userToken = window.localStorage.getItem('token');
-  //   // const tripStartDate = this.props.startDate;
-  //   // const tripEndDate = this.props.nextDate;
-
-  //   const tripStartDate = this.context.date.startDate;
-  //   const tripEndDate = this.context.date.nextDate;
-
-  //   fetch('/api/dates',
-  //     {
-  //       method: 'POST',
-  //       headers: {
-  //         'Content-Type': 'application/json',
-  //         'X-Access-Token': userToken
-  //       },
-  //       body: JSON.stringify({
-  //         tripStartDate,
-  //         tripEndDate
-  //       })
-  //     })
-  //     .then(res => res.json())
-  //     .then(result => {
-  //       this.setState({
-  //         startDate: result.tripStartDate,
-  //         currentDate: result.tripStartDate,
-  //         endDate: result.tripEndDate
-  //       });
-  //     })
-  //     .catch(error => {
-  //       console.error('Error:', error);
-  //     });
-  // }
-
-  // setDate() {
-  //   const userToken = window.localStorage.getItem('token');
-  //   const dateFilteredResult = [];
-
-  //   fetch('/api/places',
-  //     {
-  //       method: 'GET',
-  //       headers: {
-  //         'Content-Type': 'application/json',
-  //         'X-Access-Token': userToken
-  //       }
-  //     })
-  //     .then(res => res.json())
-  //     .then(result => {
-  //       if (result.length !== 0) {
-  //         result.sort((a, b) => {
-  //           if (a.tripDate < b.tripDate) {
-  //             return -1;
-  //           }
-  //           if (a.tripDate > b.tripDate) {
-  //             return 1;
-  //           }
-  //           return 0;
-  //         }
-  //         );
-  //         if (result[0].tripDate !== this.context.date.startDate && result[result.length - 1].tripDate !== this.context.date.nextDate) {
-  //           this.setState({
-  //             startDate: result[0].tripDate,
-  //             currentDate: result[0].tripDate,
-  //             endDate: this.context.date.nextDate
-  //           });
-  //         } else {
-  //           this.setState({
-  //             startDate: result[0].tripDate,
-  //             currentDate: result[0].tripDate,
-  //             endDate: result[result.length - 1].tripDate
-  //           });
-  //         }
-  //         result.forEach(itinerary => {
-  //           if (itinerary.tripDate === this.state.currentDate) {
-  //             dateFilteredResult.push(itinerary);
-  //           }
-  //           this.setState({
-  //             itinerary: dateFilteredResult
-  //           });
-  //         });
-  //       } else {
-  //         this.setState({
-  //           startDate: this.context.date.startDate,
-  //           currentDate: this.context.date.startDate,
-  //           endDate: this.context.date.nextDate
-  //         });
-  //       }
-
-  //     })
-  //     .catch(error => {
-  //       console.error('Error:', error);
-  //     });
-  // }
 
   areaSearch(query) {
 
@@ -321,7 +244,7 @@ export default class MyMap extends React.Component {
   handleNext() {
 
     const firstDay = new Date(this.state.currentDate);
-    if (this.state.currentDate !== this.state.endDate) {
+    if (this.state.currentDate !== this.state.tripEndDate) {
       this.setState({
         currentDate: new Date(firstDay.setDate(firstDay.getDate() + 1)).toISOString().slice(0, 10)
       });
@@ -331,7 +254,7 @@ export default class MyMap extends React.Component {
 
   handlePrev() {
     const currentDay = new Date(this.state.currentDate);
-    if (this.state.currentDate !== this.context.date.startDate) {
+    if (this.state.currentDate !== this.context.tripStartDate) {
       this.setState({
         currentDate: new Date(currentDay.setDate(currentDay.getDate() - 1)).toISOString().slice(0, 10)
       });
@@ -391,7 +314,7 @@ export default class MyMap extends React.Component {
 
   render() {
 
-    const { places, info, currentDate, endDate, startDate, itinerary } = this.state;
+    const { tripStartDate, tripEndDate, places, info, currentDate, itinerary } = this.state;
     return (
       <div>
         <Search onAreaSearch={this.areaSearch} onCategorySearch={this.categorySearch} onKeywordSearch={this.keywordSearch}/>
@@ -418,13 +341,13 @@ export default class MyMap extends React.Component {
           onChildClick={this.handleInfowindow}
          >
 
-              {places.map(place => (
-              <Marker
-                  key={place.place_id}
-                  lat={place.geometry.location.lat}
-                  lng={place.geometry.location.lng}
-                />
-              ))}
+        {places.map(place => (
+          <Marker
+            key={place.place_id}
+            lat={place.geometry.location.lat}
+            lng={place.geometry.location.lng}
+            />
+        ))}
 
           </GoogleMapReact>
          </div>
@@ -433,9 +356,10 @@ export default class MyMap extends React.Component {
         onHandlePrev={this.handlePrev}
         onHandleDelete={this.handleDelete}
         itinerary={itinerary}
-        startDate={startDate}
+        startDate={tripStartDate}
         currentDate={currentDate}
-        endDate={endDate}/>
+        endDate={tripEndDate}
+        />
       </div>
 
     );

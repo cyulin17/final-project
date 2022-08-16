@@ -89,8 +89,8 @@ app.post('/api/places', (req, res, next) => {
   const { userId } = req.user;
   const { tripDate, tripStartTime, tripEndTime, destination, photo } = req.body;
 
-  if (!tripStartTime || !tripDate) {
-    throw new ClientError(400, 'Please enter a date and Time.');
+  if (!tripStartTime) {
+    throw new ClientError(400, 'Please enter a Time.');
   }
 
   const sql = `
@@ -160,7 +160,6 @@ app.delete('/api/places/:placeId', (req, res, next) => {
 
     })
     .catch(err => next(err));
-
 });
 
 app.post('/api/dates', (req, res, next) => {
@@ -183,6 +182,30 @@ app.post('/api/dates', (req, res, next) => {
       const [trip] = result.rows;
       res.status(201).json(trip);
     });
+});
+
+app.get('/api/dates/:tripId', (req, res, next) => {
+  const tripId = parseInt(req.params.tripId, 10);
+
+  if (!Number.isInteger(tripId) || tripId < 1) {
+    throw new ClientError(400, 'tripId must be a positive integer');
+  }
+
+  const sql = `
+    select
+      "tripId",
+      "userId",
+      to_char("tripStartDate", 'YYYY-MM-DD') as "tripStartDate",
+      to_char("tripEndDate", 'YYYY-MM-DD') as "tripEndDate"
+      from "dates"
+      where "tripId" = $1
+  `;
+  const params = [tripId];
+  db.query(sql, params)
+    .then(result => {
+      res.json(result.rows);
+    })
+    .catch(err => next(err));
 });
 
 app.use(errorMiddleware);

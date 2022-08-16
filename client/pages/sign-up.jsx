@@ -1,6 +1,4 @@
 import React from 'react';
-import AppContext from '../lib/app-context';
-
 export default class SignUp extends React.Component {
 
   constructor(props) {
@@ -48,8 +46,7 @@ export default class SignUp extends React.Component {
           window.location.hash = '#login';
           alert('Welcome to GotoJapan!');
         }
-      }
-      )
+      })
       .catch(error => {
         console.error('Error:', error);
       });
@@ -93,4 +90,3 @@ export default class SignUp extends React.Component {
     );
   }
 }
-SignUp.contextType = AppContext;

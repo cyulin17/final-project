@@ -20,18 +20,21 @@
   }
 
   .plan-button {
-    width: 100px;
-    height: 35px;
-    font-size: 20px;
-    margin-top: 6px;
+    width: 90px;
+    height: 45px;
+    font-size: 5.5vw;
+    margin-top: 20px;
+    padding: 2px 10px;
   }
 
-  input[name="startDate"] {
+  input[name="tripStartDate"] {
     border: 1px solid #ccc;
+    font-size: 5vw;
   }
 
-  input[name="nextDate"] {
+  input[name="tripEndDate"] {
     border: 1px solid #ccc;
+    font-size: 5vw;
   }
 
   .button-container {
@@ -85,5 +88,9 @@
 
   .add {
     margin-left: 25%;
+  }
+
+  .log-out-end {
+    position: static;
   }
 }
