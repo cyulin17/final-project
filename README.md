@@ -35,7 +35,7 @@ https://go-to-japan.herokuapp.com/
 ## Stretch Features
 
 - Users can view the directions.
-- Travel Itinerary can be shared. 
+- Travel itinerary can be shared. 
 
 
 ## System Requirements
