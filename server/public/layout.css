@@ -27,14 +27,15 @@
     padding: 2px 10px;
   }
 
-  input[name="tripStartDate"] {
+  input[name="tripStartDate"],
+  input[name="tripEndDate"] {
     border: 1px solid #ccc;
     font-size: 5vw;
   }
 
-  input[name="tripEndDate"] {
-    border: 1px solid #ccc;
-    font-size: 5vw;
+  input[type="text"],
+  input[type="password"] {
+    width: 338px;
   }
 
   .button-container {
