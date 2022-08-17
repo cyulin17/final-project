@@ -44,10 +44,6 @@ To do: 1-2 short GIFs
 - NPM 8 or higher
 - PostgreSQL 12 or higher
 
-
-
-1-2 short GIFs of the most interesting or features of the application. Recommended screen recording apps are Kap and ScreenToGif.
-
 ## Getting Started
 
 1. Clone the repository.
