@@ -6,7 +6,7 @@ A full stack web application for travelers to Japan who want to make travel itin
 
 https://go-to-japan.herokuapp.com/
 
-To do: 1-2 short GIFs of the most interesting or features of the application. Recommended screen recording apps are Kap and ScreenToGif.
+To do: 1-2 short GIFs
 
 ## Technologies Used
 
