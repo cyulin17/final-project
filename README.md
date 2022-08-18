@@ -6,7 +6,9 @@ A full stack web application for travelers to Japan who want to make travel itin
 
 https://go-to-japan.herokuapp.com/
 
-To do: 1-2 short GIFs
+![alt text](https://github.com/cyulin17/go-to-japan/blob/master/server/public/images/Go-To-Japan1.gif)
+
+![alt text](https://github.com/cyulin17/go-to-japan/blob/master/server/public/images/Go-To-Japan2.gif)
 
 ## Technologies Used
 
@@ -65,7 +67,7 @@ To do: 1-2 short GIFs
 
 4. Go to [Google Map Platform](https://mapsplatform.google.com/) and create an account to obtain an API key. 
 
-5. Make a copy of the `.env.example` named `.env`. Update the Database name and add `GOOGLE_TOKEN=YOUR-API-KEY`.
+5. Make a copy of the `.env.example` named `.env`. Update the `Database name`, `TOKEN_SECRET` and add `GOOGLE_TOKEN=YOUR-API-KEY`.
 
 6. Start the `postgresql` server.
    ```shell
