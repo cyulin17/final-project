@@ -1,6 +1,6 @@
 # Go-To-Japan
 
-A full stack web application for travelers to Japan who want to make travel itineraries.
+A full stack web application for people who want to make travel itineraries in Japan.
 
 ## Live Demo
 
@@ -29,7 +29,7 @@ https://go-to-japan.herokuapp.com/
 - Users can search for activities using area criteria. 
 - Users can search for activities using categories.
 - Users can search for activities using keywords. 
-- Users can view details of destination. 
+- Users can view details of a destination. 
 - Users can add an activity to the itinerary.
 - Users can delete activities.
 - Users can create an account and sign in.
@@ -37,7 +37,7 @@ https://go-to-japan.herokuapp.com/
 ## Stretch Features
 
 - Users can view the directions.
-- Travel itinerary can be shared. 
+- Users can share their travel itinerary.
 
 
 ## System Requirements
