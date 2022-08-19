@@ -61,10 +61,13 @@ https://go-to-japan.herokuapp.com/
    
 3. Create and import database
    ```shell
-    createdb GoToJapan
+    createdb goToJapan
+   ```
+   
+   ```shell
     npm run db:import
    ```
-
+   
 4. Go to [Google Map Platform](https://mapsplatform.google.com/) and create an account to obtain an API key. 
 
 5. Make a copy of the `.env.example` named `.env`. Update the `Database name`, `TOKEN_SECRET` and add `GOOGLE_TOKEN=YOUR-API-KEY`.
