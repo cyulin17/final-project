@@ -37,7 +37,7 @@ export default class Plan extends React.Component {
     } else {
 
       if (!this.context.user) {
-        window.location.hash = '#login';
+        window.location.hash = '#signup';
       } else if (this.context.user) {
         const userToken = window.localStorage.getItem('token');
         const userId = this.context.user.userId;

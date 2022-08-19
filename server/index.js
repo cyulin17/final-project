@@ -23,6 +23,24 @@ const jsonMiddleware = express.json();
 
 app.use(jsonMiddleware);
 
+app.post('/api/users', (req, res, next) => {
+  const { email } = req.body;
+  const sql = `
+    select
+      "firstName",
+      "lastName",
+      "email"
+      from "users"
+      where "email" = $1
+  `;
+  const params = [email];
+  db.query(sql, params)
+    .then(result => {
+      res.json(result.rows);
+    })
+    .catch(err => next(err));
+});
+
 app.post('/api/users/sign-up', (req, res, next) => {
   const { firstname, lastname, email, password } = req.body;
   if (!email || !password) {
