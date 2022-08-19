@@ -4,10 +4,10 @@ export default class SignUp extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      firstname: '',
-      lastname: '',
-      email: '',
-      password: ''
+      firstname: 'User',
+      lastname: 'Demo',
+      email: 'gotojapandemo@gmail.com',
+      password: '0725'
     };
 
     this.handleChange = this.handleChange.bind(this);
@@ -43,8 +43,8 @@ export default class SignUp extends React.Component {
       })
       .then(user => {
         if (user) {
-          window.location.hash = '#login';
           alert('Welcome to GotoJapan!');
+          window.location.hash = '#login';
         }
       })
       .catch(error => {

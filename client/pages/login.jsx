@@ -25,7 +25,13 @@ export default class Login extends React.Component {
 
   handleDemoAccount(event) {
     event.preventDefault();
-    fetch('/api/users/sign-in',
+
+    // this.setState({
+    //   email: 'gotojapandemo@gmail.com',
+    //   password: '0725'
+    // });
+
+    fetch('/api/users',
       {
         method: 'POST',
         headers: {
@@ -36,22 +42,41 @@ export default class Login extends React.Component {
           password: '0725'
         })
       })
-      .then(res => {
-        if (!res.ok) {
-          alert('Invalid email or password.');
+      .then(res => res.json())
+      .then(result => {
+        if (result.length !== 0) {
+          fetch('/api/users/sign-in',
+            {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json'
+              },
+              body: JSON.stringify({
+                email: 'gotojapandemo@gmail.com',
+                password: '0725'
+              })
+            })
+            .then(res => {
+              if (!res.ok) {
+                alert('Invalid email or password.');
+              } else {
+                return res.json();
+              }
+            })
+            .then(info => {
+              if (info.token && info.user) {
+                this.props.onSignIn(info);
+              }
+              window.location.hash = '#';
+              alert('Login successful!');
+            })
+            .catch(error => {
+              console.error('Error:', error);
+            });
         } else {
-          return res.json();
+          alert('Welcome! Please sign up to continue.');
         }
-
       })
-      .then(info => {
-        if (info.token && info.user) {
-          this.props.onSignIn(info);
-        }
-        window.location.hash = '#';
-        alert('Login successful!');
-      }
-      )
       .catch(error => {
         console.error('Error:', error);
       });
