@@ -11,7 +11,8 @@ body {
 .right-arrow,
 .add,
 .schedule-box,
-.destination-website {
+.destination-website,
+.my-trips {
   cursor: pointer;
 }
 

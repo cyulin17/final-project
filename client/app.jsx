@@ -45,28 +45,34 @@ export default class App extends React.Component {
 
   signOut() {
     window.localStorage.removeItem('token');
-    this.setState({ user: null });
+    this.setState({
+      user: null,
+      tripId: null
+    });
   }
 
   getDate(date) {
     const tripStartDate = date.tripStartDate;
     const tripEndDate = date.tripEndDate;
-    const tripId = date.tripId;
 
     this.setState({
       tripStartDate: tripStartDate,
-      tripEndDate: tripEndDate,
-      tripId: tripId
+      tripEndDate: tripEndDate
     });
 
-    const setTripId = this.state.tripId;
-    window.localStorage.setItem('tripId', setTripId);
   }
 
   renderPage() {
     const { route } = this.state;
+
     if (route.path === '') {
-      return <Home />;
+      if (this.state.user) {
+        const userId = this.state.user.userId;
+        return <Home userId={userId}/>;
+      } else {
+        return <Home />;
+      }
+
     }
     if (route.path === 'login') {
       return <Login onSignIn={this.signIn} />;

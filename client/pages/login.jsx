@@ -91,8 +91,9 @@ export default class Login extends React.Component {
 
   render() {
     return (
-      <form onSubmit={this.handleSubmit}>
+
         <div className="container-fluid  login-container">
+          <form onSubmit={this.handleSubmit}>
           <span className="navbar-brand logo">
             <a href='#'>GotoJapan</a>
           </span>
@@ -107,13 +108,11 @@ export default class Login extends React.Component {
         <div className="button-container">
           <button type="submit" className="submit">Log In</button>
         </div>
-        <div className="button-container">
-          <button onClick={this.handleDemoAccount} type="submit" className="demo">Demo Account</button>
-        </div>
+      </form>
+        <div className="button-container"><button onClick={this.handleDemoAccount} type="submit" className="demo">Demo Account</button></div>
         <div className="line"></div>
         <div className="user"><a href="#signup">New Users</a></div>
-        </div>
-      </form>
+      </div>
     );
   }
 }

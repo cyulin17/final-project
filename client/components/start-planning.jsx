@@ -27,7 +27,6 @@ export default class Plan extends React.Component {
   handleSubmit(event) {
     event.preventDefault();
 
-    const tripId = window.localStorage.getItem('tripId');
     const startDate = this.state.tripStartDate;
     const EndDate = this.state.tripEndDate;
     const tripStartDate = new Date(startDate).getTime();
@@ -36,32 +35,51 @@ export default class Plan extends React.Component {
     if (tripStartDate > tripEndDate) {
       alert('Trip Dates are not valid.');
     } else {
+
       if (!this.context.user) {
         window.location.hash = '#login';
-      } else if (this.context.user && !tripId) {
-
+      } else if (this.context.user) {
         const userToken = window.localStorage.getItem('token');
-
-        fetch('/api/dates',
+        const userId = this.context.user.userId;
+        fetch(`/api/dates/${userId}`,
           {
-            method: 'POST',
+            method: 'GET',
             headers: {
               'Content-Type': 'application/json',
               'X-Access-Token': userToken
-            },
-            body: JSON.stringify(this.state)
+            }
           })
           .then(res => res.json())
           .then(date => {
-            this.context.getDate(date);
+            if (date.length === 0) {
+              const userToken = window.localStorage.getItem('token');
+              fetch('/api/dates',
+                {
+                  method: 'POST',
+                  headers: {
+                    'Content-Type': 'application/json',
+                    'X-Access-Token': userToken
+                  },
+                  body: JSON.stringify(this.state)
+                })
+                .then(res => res.json())
+                .then(date => {
+                  this.context.getDate(date);
+                  window.location.hash = '#map';
+                })
+                .catch(error => {
+                  console.error('Error:', error);
+                });
+            } else {
+              alert('You have an existing travel plan, please go to My Trips.');
+
+            }
           })
           .catch(error => {
             console.error('Error:', error);
           });
-        window.location.hash = '#map';
-      } else if (this.context.user && tripId) {
-        alert('You have an existing travel plan, please go to My Trips.');
       }
+
     }
   }
 
@@ -85,5 +103,4 @@ export default class Plan extends React.Component {
     );
   }
 }
-
 Plan.contextType = AppContext;
