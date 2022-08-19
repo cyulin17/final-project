@@ -184,11 +184,11 @@ app.post('/api/dates', (req, res, next) => {
     });
 });
 
-app.get('/api/dates/:tripId', (req, res, next) => {
-  const tripId = parseInt(req.params.tripId, 10);
+app.get('/api/dates/:userId', (req, res, next) => {
+  const userId = parseInt(req.params.userId, 10);
 
-  if (!Number.isInteger(tripId) || tripId < 1) {
-    throw new ClientError(400, 'tripId must be a positive integer');
+  if (!Number.isInteger(userId) || userId < 1) {
+    throw new ClientError(400, 'userId must be a positive integer');
   }
 
   const sql = `
@@ -198,9 +198,9 @@ app.get('/api/dates/:tripId', (req, res, next) => {
       to_char("tripStartDate", 'YYYY-MM-DD') as "tripStartDate",
       to_char("tripEndDate", 'YYYY-MM-DD') as "tripEndDate"
       from "dates"
-      where "tripId" = $1
+      where "userId" = $1
   `;
-  const params = [tripId];
+  const params = [userId];
   db.query(sql, params)
     .then(result => {
       res.json(result.rows);

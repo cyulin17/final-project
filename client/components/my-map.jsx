@@ -56,9 +56,9 @@ export default class MyMap extends React.Component {
 
   setDate() {
     const userToken = window.localStorage.getItem('token');
-    const getTripId = window.localStorage.getItem('tripId');
+    const getUserId = this.context.user.userId;
 
-    fetch(`/api/dates/${getTripId}`,
+    fetch(`/api/dates/${getUserId}`,
       {
         method: 'GET',
         headers: {
@@ -68,13 +68,16 @@ export default class MyMap extends React.Component {
       })
       .then(res => res.json())
       .then(result => {
-        const tripStartDate = result[0].tripStartDate;
-        const tripEndDate = result[0].tripEndDate;
-        this.setState({
-          tripStartDate: tripStartDate,
-          currentDate: tripStartDate,
-          tripEndDate: tripEndDate
-        });
+        if (result) {
+          const tripStartDate = result[0].tripStartDate;
+          const tripEndDate = result[0].tripEndDate;
+          this.setState({
+            tripStartDate: tripStartDate,
+            currentDate: tripStartDate,
+            tripEndDate: tripEndDate
+          });
+        }
+
       })
       .catch(error => {
         console.error('Error:', error);

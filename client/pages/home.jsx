@@ -5,9 +5,10 @@ import Plan from '../components/start-planning';
 export default class Home extends React.Component {
 
   render() {
+    // const userId = this.props;
     return (
       <>
-        <Header />
+        <Header/>
         <Carousel />
         <Plan/>
       </>
