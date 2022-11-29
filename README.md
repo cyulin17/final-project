@@ -4,7 +4,7 @@ A full stack web application for people who want to make travel itineraries in J
 
 ## Live Demo
 
-https://go-to-japan.herokuapp.com/
+https://go-to-japan.chiayulin.com/
 
 ![alt text](https://github.com/cyulin17/go-to-japan/blob/master/server/public/images/Go-To-Japan1.gif)
 
