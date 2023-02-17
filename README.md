@@ -20,7 +20,7 @@ https://go-to-japan.chiayulin.com/
 - PostgreSQL
 - Node.js
 - Webpack
-- Heroku
+- AWS
 - [Google Map API](https://developers.google.com/maps/documentation)
 - [google-map-react](https://www.npmjs.com/package/google-map-react)
 
