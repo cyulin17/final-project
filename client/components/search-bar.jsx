@@ -80,6 +80,7 @@ export default class Search extends React.Component {
   }
 
   handleSubmit(event) {
+
     event.preventDefault();
 
     if (this.state.setArea !== '' && this.state.setCategory === '') {
