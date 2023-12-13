@@ -1,11 +1,14 @@
 import React from 'react';
-import Home from './pages/home';
+// import Home from './pages/home';
 import Login from './pages/login';
 import SignUp from './pages/sign-up';
 import MyMap from '../client/components/my-map';
 import parseRoute from './lib/parse.route';
 import jwtDecode from 'jwt-decode';
 import AppContext from './lib/app-context';
+import Header from './components/header';
+import Carousel from './components/carousel';
+import Plan from './components/start-planning';
 
 export default class App extends React.Component {
 
@@ -67,12 +70,8 @@ export default class App extends React.Component {
 
     if (route.path === '') {
       if (this.state.user) {
-        const userId = this.state.user.userId;
-        return <Home userId={userId}/>;
-      } else {
-        return <Home />;
+        return null;
       }
-
     }
     if (route.path === 'login') {
       return <Login onSignIn={this.signIn} />;
@@ -103,6 +102,9 @@ export default class App extends React.Component {
     return (
     <AppContext.Provider value={contextValue}>
         <>
+          <Header />
+          <Carousel />
+          <Plan />
           { this.renderPage()}
         </>
     </AppContext.Provider>
