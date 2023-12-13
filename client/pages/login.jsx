@@ -22,6 +22,35 @@ export default class Login extends React.Component {
     });
   }
 
+  handleDemoAccount(event) {
+    event.preventDefault();
+
+    const demoCredentials = {
+      email: 'gotojapandemo@gmail.com',
+      password: 'demopassword'
+    };
+
+    fetch('/api/users/sign-in', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(demoCredentials)
+    })
+      .then(res => res.json())
+      .then(info => {
+        if (info.token && info.user) {
+          this.props.onSignIn(info);
+        }
+        window.location.hash = '#';
+        alert('Login successful!');
+      })
+      .catch(error => {
+        console.error('Error:', error);
+        alert('Demo login failed.');
+      });
+  }
+
   handleSubmit(event) {
     event.preventDefault();
     fetch('/api/users/sign-in',
@@ -71,9 +100,12 @@ export default class Login extends React.Component {
         <input onChange={this.handleChange} value={this.state.password} type="password" name="password" placeholder="password" id="password" />
         </div>
         <div className="button-container">
-          <button type="submit" className="submit">Log In (Demo)</button>
+          <button type="submit" className="submit">Log In</button>
         </div>
-      </form>
+        </form>
+        <div className="button-container">
+          <button type="submit" className="submit">Demo Account</button>
+        </div>
         <div className="line"></div>
         <div className="user"><a href="#signup">New Users</a></div>
       </div>
