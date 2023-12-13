@@ -4,10 +4,10 @@ export default class SignUp extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      firstname: 'User',
-      lastname: 'Demo',
-      email: 'gotojapandemo@gmail.com',
-      password: '0725'
+      firstname: '',
+      lastname: '',
+      email: '',
+      password: ''
     };
 
     this.handleChange = this.handleChange.bind(this);
