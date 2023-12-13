@@ -4,8 +4,8 @@ export default class Login extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      email: 'gotojapandemo@gmail.com',
-      password: '0725'
+      email: '',
+      password: ''
     };
 
     this.handleChange = this.handleChange.bind(this);
@@ -103,9 +103,7 @@ export default class Login extends React.Component {
           <button type="submit" className="submit">Log In</button>
         </div>
         </form>
-        <div className="button-container">
-          <button type="submit" className="submit">Demo Account</button>
-        </div>
+        <div className="button-container"><button onClick={this.handleDemoAccount} type="submit" className="demo">Log In (Demo)</button></div>
         <div className="line"></div>
         <div className="user"><a href="#signup">New Users</a></div>
       </div>
