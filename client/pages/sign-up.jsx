@@ -26,6 +26,14 @@ export default class SignUp extends React.Component {
 
   handleSubmit(event) {
     event.preventDefault();
+
+    const { firstname, lastname, email, password } = this.state;
+
+    if (!firstname || !lastname || !email || !password) {
+      alert('All fields are required.');
+      return;
+    }
+
     fetch('/api/users/sign-up',
       {
         method: 'POST',
@@ -34,13 +42,7 @@ export default class SignUp extends React.Component {
         },
         body: JSON.stringify(this.state)
       })
-      .then(res => {
-        if (!res.ok) {
-          alert('All fields are required.');
-        } else {
-          return res.json();
-        }
-      })
+      .then(res => res.json())
       .then(user => {
         if (user) {
           alert('Welcome to GotoJapan!');
