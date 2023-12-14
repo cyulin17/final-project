@@ -69,9 +69,7 @@ export default class App extends React.Component {
     const { route } = this.state;
 
     if (route.path === '') {
-      if (this.state.user) {
-        return null;
-      }
+      return null;
     }
     if (route.path === 'login') {
       return <Login onSignIn={this.signIn} />;
@@ -86,6 +84,7 @@ export default class App extends React.Component {
   }
 
   render() {
+
     if (this.state.isAuthorizing) return null;
     const { user, route, tripStartDate, tripEndDate, tripId } = this.state;
     const { signIn, signOut, getDate } = this;
@@ -99,12 +98,14 @@ export default class App extends React.Component {
       signOut,
       getDate
     };
+
+    const homePage = route.path === '';
     return (
     <AppContext.Provider value={contextValue}>
         <>
-          <Header />
-          <Carousel />
-          <Plan />
+          {homePage && <Header />}
+          {homePage && <Carousel />}
+          {homePage && <Plan />}
           { this.renderPage()}
         </>
     </AppContext.Provider>
