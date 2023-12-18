@@ -10,6 +10,7 @@ export default class Login extends React.Component {
 
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
+    this.handleDemoAccount = this.handleDemoAccount.bind(this);
   }
 
   handleChange(event) {
@@ -20,6 +21,40 @@ export default class Login extends React.Component {
     this.setState({
       [name]: value
     });
+  }
+
+  handleDemoAccount(event) {
+    event.preventDefault();
+    fetch('/api/users/sign-in',
+      {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          email: 'gotojapandemo@gmail.com',
+          password: '0725'
+        })
+      })
+      .then(res => {
+        if (!res.ok) {
+          alert('Invalid email or password.');
+        } else {
+          return res.json();
+        }
+
+      })
+      .then(info => {
+        if (info.token && info.user) {
+          this.props.onSignIn(info);
+        }
+        window.location.hash = '#';
+        alert('Login successful!');
+      }
+      )
+      .catch(error => {
+        console.error('Error:', error);
+      });
   }
 
   handleSubmit(event) {
@@ -71,9 +106,12 @@ export default class Login extends React.Component {
         <input onChange={this.handleChange} value={this.state.password} type="password" name="password" placeholder="password" id="password" />
         </div>
         <div className="button-container">
-          <button type="submit" className="submit">Log In / Demo Log In</button>
+          <button type="submit" className="submit">Log In</button>
         </div>
         </form>
+        <div className="button-container">
+          <button onClick={this.handleDemoAccount} type="submit" className="demo">Demo Account</button>
+        </div>
         <div className="line"></div>
         <div className="user"><a href="#signup">New Users</a></div>
       </div>
