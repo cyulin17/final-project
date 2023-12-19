@@ -4,8 +4,8 @@ export default class Login extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      email: 'gotojapandemo@gmail.com',
-      password: '0725'
+      email: 'tokyo.tower@gmail.com',
+      password: '1219'
     };
 
     this.handleChange = this.handleChange.bind(this);
@@ -73,9 +73,11 @@ export default class Login extends React.Component {
         } else {
           return res.json();
         }
+        // console.log(res);
 
       })
       .then(info => {
+        // console.log(info);
         if (info.token && info.user) {
           this.props.onSignIn(info);
         }
@@ -90,6 +92,8 @@ export default class Login extends React.Component {
   }
 
   render() {
+    // console.log(this.state);
+
     return (
 
         <div className="container-fluid  login-container">

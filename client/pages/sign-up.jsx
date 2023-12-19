@@ -4,10 +4,10 @@ export default class SignUp extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      firstname: 'User',
-      lastname: 'Demo',
-      email: 'gotojapandemo@gmai.com',
-      password: '0725'
+      firstname: '',
+      lastname: '',
+      email: '',
+      password: ''
     };
 
     this.handleChange = this.handleChange.bind(this);
@@ -56,6 +56,7 @@ export default class SignUp extends React.Component {
   }
 
   render() {
+    // console.log(this.state);
     return (
 
         <div className="container-fluid signup-container">
