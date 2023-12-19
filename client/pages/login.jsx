@@ -10,7 +10,6 @@ export default class Login extends React.Component {
 
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
-    // this.handleDemoAccount = this.handleDemoAccount.bind(this);
   }
 
   handleChange(event) {
@@ -22,40 +21,6 @@ export default class Login extends React.Component {
       [name]: value
     });
   }
-
-  // handleDemoAccount(event) {
-  //   event.preventDefault();
-  //   fetch('/api/users/sign-in',
-  //     {
-  //       method: 'POST',
-  //       headers: {
-  //         'Content-Type': 'application/json'
-  //       },
-  //       body: JSON.stringify({
-  //         email: 'gotojapandemo@gmail.com',
-  //         password: '0725'
-  //       })
-  //     })
-  //     .then(res => {
-  //       if (!res.ok) {
-  //         alert('Invalid email or password.');
-  //       } else {
-  //         return res.json();
-  //       }
-
-  //     })
-  //     .then(info => {
-  //       if (info.token && info.user) {
-  //         this.props.onSignIn(info);
-  //       }
-  //       window.location.hash = '#';
-  //       alert('Login successful!');
-  //     }
-  //     )
-  //     .catch(error => {
-  //       console.error('Error:', error);
-  //     });
-  // }
 
   handleSubmit(event) {
     event.preventDefault();
@@ -73,11 +38,9 @@ export default class Login extends React.Component {
         } else {
           return res.json();
         }
-        // console.log(res);
 
       })
       .then(info => {
-        // console.log(info);
         if (info.token && info.user) {
           this.props.onSignIn(info);
         }
@@ -92,7 +55,6 @@ export default class Login extends React.Component {
   }
 
   render() {
-    // console.log(this.state);
 
     return (
 
@@ -114,7 +76,6 @@ export default class Login extends React.Component {
         </div>
         </form>
         <div className="button-container">
-          {/* <button onClick={this.handleDemoAccount} type="submit" className="demo">Demo Account</button> */}
         </div>
         <div className="line"></div>
         <div className="user"><a href="#signup">New Users</a></div>

@@ -56,7 +56,6 @@ export default class SignUp extends React.Component {
   }
 
   render() {
-    // console.log(this.state);
     return (
 
         <div className="container-fluid signup-container">

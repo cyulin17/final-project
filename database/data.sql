@@ -1,2 +1,0 @@
--- INSERT INTO users (email, password) VALUES ('gotojapandemo@gmail.com', '$2b$10$XAshcz/b7oDnA7QDzPT2reoM3SH0mroV4xSbnvY613vjrYaWIBNeK');
--- INSERT INTO users (firstName, lastName, email, hashedPassword) VALUES ('user', 'demo', 'gotojapandemo@gmail.com', '$2b$10$XAshcz/b7oDnA7QDzPT2reoM3SH0mroV4xSbnvY613vjrYaWIBNeK');
